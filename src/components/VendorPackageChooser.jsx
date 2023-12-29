@@ -19,7 +19,7 @@ const VendorPackageChooser = () => {
             name="package"
             value="Regular"
             checked={selectedPackage === 'Regular'}
-            className=''
+            className='mr-3'
             onChange={() => handlePackageSelection('Regular')}
           />Regular - ----------
         </label>
@@ -31,6 +31,7 @@ const VendorPackageChooser = () => {
             name="package"
             value="Premium"
             checked={selectedPackage === 'Premium'}
+            className='mr-3'
             onChange={() => handlePackageSelection('Premium')}
           />
           Premium - ---------

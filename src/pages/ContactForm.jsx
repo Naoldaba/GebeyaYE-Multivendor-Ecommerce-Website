@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import feedback from "../utils/feedback.avif"
 
 
 const ContactForm = () => {
@@ -18,9 +18,12 @@ const ContactForm = () => {
     }
 
     return (
-        <div>
-            <form className="w-1/2 max-w-lg mx-auto bg-gray-300 p-5 rounded-lg" onSubmit={handleSubmit}>
-                <h2 className="text-2xl mb-5">Feedback</h2>
+        <div className="flex justify-around">
+            <div className="hidden lg:block w-1/2">
+                <img src={feedback} className="w-full" />
+            </div>
+            <form className=" max-w-lg p-5 rounded-lg" onSubmit={handleSubmit}>
+                <h2 className="text-3xl mb-5">Feedback</h2>
                 <fieldset className="">
                     <div className="">
                         <input className="w-full mb-6" type="text" placeholder='Full Name' value={name} onChange={(e)=>setName(e.target.value)}/>
@@ -31,6 +34,7 @@ const ContactForm = () => {
                     <button className="bg-blue-500 text-white p-1 rounded w-20">Send</button>
                 </fieldset>
             </form>
+            
         </div>
         
     );

@@ -86,10 +86,10 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
             ))}
 
             {cart.length>0 && 
-                <div className="w-96">
+                <form className="w-96">
                     <p className="w-full mb-10 font-bold">Total Price: {calculateTotalPrice()}</p>
-                    <label className="">Choose delivery date<input type="date" className="w-full" placeholder="Choose delivery date"/></label>
-                    <select className="w-full my-10">
+                    <label className="">Choose delivery date<input type="date" className="w-full" placeholder="Choose delivery date" required/></label>
+                    <select className="w-full my-10" required>
                         <option value="">Choose delivery location</option>
                         <option value="Addis Ketema">Addis Ketema</option>
                         <option value="Akaky Kaliti">Akaky Kaliti</option>
@@ -102,9 +102,9 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
                         <option value="Nifas Silk-Lafto">Nifas Silk-Lafto</option>
                         <option value="Yeka">Yeka</option>
                     </select>
-                    <button className="bg-blue-500 text-white w-full mb-10 p-1">Proceed to Checkout</button>
+                    <button className="bg-blue-500 text-white w-full mb-10 p-1" type="submit">Proceed to Checkout</button>
                     
-                </div>
+                </form>
             }
         </div>
     );

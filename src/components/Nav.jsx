@@ -15,6 +15,7 @@ function Nav({cartCount}){
     }
 
     const [accountClick, setAccountClick]=useState(false);
+
     const toggleAccount =()=>{
         setAccountClick(!accountClick);
     }
@@ -35,16 +36,16 @@ function Nav({cartCount}){
                             <li><NavLink exact to="/" activeClassName="border-b-4 border-black rounded"><GoHomeFill className="text-2xl text-center w-full"/>Home</NavLink></li>
                             <div className="flex flex-wrap justify-center relative">
                                 <li onClick={toggleAccount}><NavLink to=""><RiAccountCircleFill className="text-2xl text-center w-full"/>Account</NavLink></li>
-                                <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded p-1">
+                                <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded py-3">
                                     <ul className=""> 
-                                        <li><NavLink to="/login" activeClassName="border-b-4 border-black rounded">Login</NavLink></li>
-                                        <li><NavLink to="/signup" activeClassName="border-b-4 border-black rounded">Sign Up</NavLink></li>
+                                        <li onClick={toggleAccount}><NavLink to="/login" activeClassName="border-b-4 border-black rounded">Login</NavLink></li>
+                                        <li onClick={toggleAccount}><NavLink to="/signup" activeClassName="border-b-4 border-black rounded">Sign Up</NavLink></li>
                                     </ul>
                                 </div>
                             </div>
                             <div className="relative">
                                 <li className="text-center"><NavLink to="/cart" activeClassName="border-b-4 border-black rounded"><FaCartShopping className="text-2xl text-center w-full" /> cart</NavLink></li>
-                                <span className="absolute -top-5 -right-3 text-xl font-bold">{cartCount}</span>
+                                <span className="absolute -top-5 -right-3 text-xl">{cartCount}</span>
                             </div>
                             
                         </ul>

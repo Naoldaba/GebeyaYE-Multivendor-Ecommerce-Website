@@ -37,7 +37,7 @@ const AdminMain = ({ activeMenu, requests }) => {
             <h2 className='text-4xl text-center mb-12'>Requests</h2>
             {requests.map((request, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6 my-20'>
-                    <div className='flex flex-wrap  text-2xl items-center'>
+                    <div className='flex flex-wrap  items-center'>
                         <img src={request.profilePic} alt="Profile" className='w-1/2' />
                         <div>
                             <div className='mb-4'>
@@ -83,7 +83,7 @@ const AdminMain = ({ activeMenu, requests }) => {
             <h2 className='text-4xl text-center mb-12'>Vendor List</h2>
             {vendors.map((vendor, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6'>
-                    <div className='flex flex-wrap  text-2xl items-center'>
+                    <div className='flex flex-wrap items-center'>
                         <img src={vendor.profilePic} alt="Profile" className='w-1/2' />
                         <div>
                             <div className='mb-4'>
@@ -119,7 +119,7 @@ const AdminMain = ({ activeMenu, requests }) => {
 
                     </div>
                     
-                    <button className='bg-blue-500 text-white p-2 w-36 mx-auto'>Ban Vendor</button>
+                    <button className='bg-blue-500 text-white p-2 w-36 mx-auto' type='submit'>Ban Vendor</button>
                 </div>
                 ))}
 

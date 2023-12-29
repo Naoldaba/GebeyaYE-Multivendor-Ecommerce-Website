@@ -1,7 +1,9 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
+import { AuthContext } from '../components/AuthContext';
 
 const ProductCatalog = ({products, addToCart}) => {
     const [selectedProduct, setSelectedProduct]= useState(null);
+    const {isAuthenticated, login}=useContext(AuthContext);
     
     const toggleAccordion=(productId)=>{
         if (selectedProduct===productId){
@@ -10,6 +12,22 @@ const ProductCatalog = ({products, addToCart}) => {
             setSelectedProduct(productId);
         }
     };
+
+    const handleAddToCart=(item)=>{
+        if (isAuthenticated){
+            addToCart(item);
+            console.log('Item added to cart')
+        } else{
+            console.log("please log in first")
+        }
+        
+    }
+
+    const handleLogin = () => {
+        // Simulating a login action
+        login(); // This will set isAuthenticated to true
+      };
+    
 
     return ( 
         <div className="product-catalog max-w-4xl rounded-lg text-center mx-auto my-20">
@@ -26,7 +44,7 @@ const ProductCatalog = ({products, addToCart}) => {
                             {selectedProduct === product.id && (
                                 <p className="text-gray-600 mb-2 w-full">{product.description}</p>
                             )}
-                            <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={()=>addToCart(product)} >Add to Cart</button>  
+                            <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={handleAddToCart(product)} >Add to Cart</button>  
                         </div> 
                     </div>
                 ))}

@@ -3,7 +3,6 @@ import { FaYoutube } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaTelegram } from "react-icons/fa";
 import { BiLogoGmail } from "react-icons/bi";
-import { IoLogoWhatsapp } from "react-icons/io";
 import { NavLink } from "react-router-dom";
 
 function Footer(){
@@ -28,7 +27,6 @@ function Footer(){
                 <FaTelegram className="social-icons" color="#672301DE" fontSize="20px"/>
                 <FaYoutube className="social-icons" color="#672301DE" fontSize="20px"/>
                 <BiLogoGmail className="social-icons" color="#672301DE" fontSize="20px"/>
-                <IoLogoWhatsapp className="social-icons" color="#672301DE" fontSize="20px"/>
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DashboardSidebar from '../components/DashboardSidebar';
-import DashboardMain from '../components/DashboardMain';
+import DashboardSidebar from '../components/VendorSidebar';
+import DashboardMain from '../components/VendorMain';
 
 
 const VendorDashboard = ({products}) => {
