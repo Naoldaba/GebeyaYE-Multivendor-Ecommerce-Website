@@ -1,14 +1,17 @@
 import SearchWithDropdown from "./SearchWithDropdown";
 import Hamburger from "./Hamburger";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from 'react-router-dom';
 import { FaCartShopping } from "react-icons/fa6";
 import { RiAccountCircleFill } from "react-icons/ri";
 import { GoHomeFill } from "react-icons/go";
+import { AuthContext } from "./AuthContext";
 
-function Nav({cartCount}){
+
+function Nav({cartCount, setProducts}){
 
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
+    const {isAuthenticated,logout}= useContext(AuthContext);
 
     const toggleHamburger = () =>{
         setHamburgerOpen(!hamburgerOpen)
@@ -20,6 +23,14 @@ function Nav({cartCount}){
         setAccountClick(!accountClick);
     }
 
+    const toggleLogoutAccount =()=>{
+        console.log(isAuthenticated);
+        setAccountClick(!accountClick);
+        logout();
+        console.log(isAuthenticated)
+    }
+
+
     return (
         <>
             <div>
@@ -29,23 +40,52 @@ function Nav({cartCount}){
                         <p className="text-sm font-normal not-italic">ሱቅ ከእልፍኜ</p>
                     </div>
                     <div className="search_filter w-1/2">      
-                        <SearchWithDropdown/>
+                        <SearchWithDropdown setProducts={setProducts}/>
                     </div>
                     <nav>
                         <ul className="nav md:flex text-white text-xs gap-6 hidden">
                             <li><NavLink exact to="/" activeClassName="border-b-4 border-black rounded"><GoHomeFill className="text-2xl text-center w-full"/>Home</NavLink></li>
                             <div className="flex flex-wrap justify-center relative">
                                 <li onClick={toggleAccount}><NavLink to=""><RiAccountCircleFill className="text-2xl text-center w-full"/>Account</NavLink></li>
-                                <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded py-3">
-                                    <ul className=""> 
-                                        <li onClick={toggleAccount}><NavLink to="/login" activeClassName="border-b-4 border-black rounded">Login</NavLink></li>
-                                        <li onClick={toggleAccount}><NavLink to="/signup" activeClassName="border-b-4 border-black rounded">Sign Up</NavLink></li>
-                                    </ul>
-                                </div>
+                                {isAuthenticated===false ? (
+                                    <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded py-3">
+                                        <ul className=""> 
+                                            <li onClick={toggleAccount}><NavLink to="/login" activeClassName="border-b-4 border-black rounded">Login</NavLink></li>
+                                            <li onClick={toggleAccount}><NavLink to="/signup" activeClassName="border-b-4 border-black rounded">Sign Up</NavLink></li>
+                                        </ul>
+                                    </div>
+                                ) : (
+                                    <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded py-3">
+                                        <ul className=""> 
+                                            <li onClick={toggleLogoutAccount}><NavLink to="/logout" activeClassName="border-b-4 border-black rounded">Log out</NavLink></li>
+                                        </ul>
+                                    </div>
+                                )}
+                                
                             </div>
                             <div className="relative">
-                                <li className="text-center"><NavLink to="/cart" activeClassName="border-b-4 border-black rounded"><FaCartShopping className="text-2xl text-center w-full" /> cart</NavLink></li>
-                                <span className="absolute -top-5 -right-3 text-xl">{cartCount}</span>
+                                {isAuthenticated ? (
+                                    <NavLink
+                                        to="/cart"
+                                        activeClassName="border-b-4 border-black rounded"
+                                    >
+                                        <FaCartShopping className="text-2xl text-center w-full" />cart
+                                    </NavLink>
+                                ) : (
+                                    <div
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                        }}
+                                    >
+                                        <FaCartShopping className="text-2xl text-center w-full cursor-not-allowed" />
+                                        cart
+                                    </div>
+                                )}
+
+                                {isAuthenticated && (
+                                    <span className="absolute -top-5 -right-3 text-xl">{cartCount}</span>
+                                )}
                             </div>
                             
                         </ul>
@@ -60,8 +100,15 @@ function Nav({cartCount}){
                 <div id="dropdown" className="hidden mt-1 border-white bg-primary py-5">
                     <ul className="px-5 text-xl text-white flex flex-col gap-4 items-center ">
                         <li className="hover:cursor-pointer"><NavLink to="/">Home</NavLink></li>
-                        <li className="hover: cursor-pointer"><NavLink to="/login">Login</NavLink></li>
-                        <li className="hover: cursor-pointer"><NavLink to="/signup">Sign Up</NavLink></li>
+                        { isAuthenticated==false ? (
+                            <>
+                                <li className="hover: cursor-pointer"><NavLink to="/login">Login</NavLink></li>
+                                <li className="hover: cursor-pointer"><NavLink to="/signup">Sign Up</NavLink></li>
+                            </>
+                        ): (
+                            <li onClick={toggleLogoutAccount}><NavLink to="/logout" activeClassName="hover:cursor-pointer">Log out</NavLink></li>
+                        )}
+                        
                         <li className="hover: cursor-pointer"><NavLink to="/cart">Cart</NavLink></li>
                         <li className="hover: cursor-pointer"><NavLink to="/about">About Us</NavLink></li>
                     </ul>

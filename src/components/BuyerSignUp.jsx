@@ -1,11 +1,14 @@
 import { useState } from "react";
 
-const BuyerSignUp = () => {
+const BuyerSignUp = ({buyerData, setBuyerData}) => {
 
-    const [selectedValue, setSelectedValue]=useState('Select subcity');
+    // const [selectedValue, setSelectedValue]=useState('Select subcity');
 
-    const handleOption=(event)=>{
-        setSelectedValue(event.target.value)
+    // const handleOption=(event)=>{
+    //     setSelectedValue(event.target.value)
+    // }
+    const handleData=(prop,event)=>{
+        setBuyerData({...buyerData, [prop]:event.target.value})
     }
 
 
@@ -13,25 +16,26 @@ const BuyerSignUp = () => {
         <>
             <div className="w-4/5 my-10">
                 <label className="block mb-2 text-lg">Full Name</label>
-                <input className="w-full" type="text" placeholder="Enter full name" required/>
+                <input className="w-full" type="text" placeholder="Enter full name" required onChange={(event)=>handleData("name",event)}/>
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">User Name</label>
-                <input className="w-full" type="text" placeholder="Enter user name" required/>
+                <input className="w-full" type="text" placeholder="Enter user name" required onChange={(event)=>handleData("user_name",event)}/>
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Password</label>
-                <input className="w-full" type="password" placeholder="Enter password" required/>
+                <input className="w-full" type="password" placeholder="Enter password" required onChange={(event)=>handleData("password",event)}/>
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Email</label>
-                <input className="w-full" type="email" placeholder="Enter email" required/>
+                <input className="w-full" type="email" placeholder="Enter email" required onChange={(event)=>handleData("email",event)}/>
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Phone Number</label>
-                <input className="w-full" type="number" placeholder="Enter phone number" required/>
+                <input className="w-full" type="number" placeholder="Enter phone number" required onChange={(event)=>handleData("phone_num",event)}/>
             </div>
-            <div className="w-4/5 mb-5">
+
+            {/* <div className="w-4/5 mb-5">
                 <h1 className="text-lg">Address</h1>
                 <select className="w-full"  value={selectedValue} onChange={handleOption}  required>
                         <option value="">Select Subcity</option>
@@ -46,13 +50,12 @@ const BuyerSignUp = () => {
                         <option value="Nifas Silk-Lafto">Nifas Silk-Lafto</option>
                         <option value="Yeka">Yeka</option>
                 </select>
-            </div>
+            </div> */}
             
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Account Number</label>
-                <input className="w-full" type="number" placeholder="Credit card number" required/>
+                <input className="w-full" type="number" placeholder="Credit card number" required onChange={(event)=>handleData("account_number",event)}/>
             </div>
-            
         </>
     );
 }

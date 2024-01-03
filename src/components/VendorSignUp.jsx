@@ -1,4 +1,5 @@
 
+import { NavLink } from "react-router-dom";
 import VendorPackageChooser from "./VendorPackageChooser";
 import { useState } from "react";
 
@@ -15,9 +16,16 @@ const VendorSignUp = ({vendorData, setVendorData}) => {
         setVendorData({ ...vendorData, [prop]: event.target.value });
     };
     
+    const handleFileInputChange = async (prop, event) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append(prop, file);
+        setVendorData({ ...vendorData, [prop]: formData });
+    };
 
     return (
         <>
+            <NavLink to='/application status' className="text-blue-500 text-lg absolute top-44 right-5">Check application status?</NavLink>
             <div className="w-4/5 my-10">
                 <label className="block mb-2 text-lg">Full Name</label>
                 <input className="w-full" type="text" placeholder="Enter full name" required onChange={(event)=>handleInputChange("name", event)} />
@@ -55,15 +63,16 @@ const VendorSignUp = ({vendorData, setVendorData}) => {
                 <label className="block mb-2 text-lg">Account Number</label>
                 <input className="w-full" type="number" placeholder="Credit card number" required onChange={(event)=>handleInputChange("account_number", event)} />
             </div>
-            <VendorPackageChooser/>
+            <VendorPackageChooser vendorData={vendorData} setVendorData={setVendorData}/>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Trade Licence</label>
-                <input className="w-full" type="file" placeholder="Upload licence" required onChange={(event)=>handleInputChange("trade_licence", event)} />
+                <input className="w-full" type="file" placeholder="Upload licence" required onChange={(event) => handleFileInputChange("trade_licence", event)} />
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Profile Picture</label>
-                <input className="w-full" type="file" name="image" accept="image/*" placeholder="Upload licence" required onChange={(event)=>handleInputChange("profile_pic", event)} />
+                <input className="w-full" type="file" name="image" accept="image/*" placeholder="Upload licence" required onChange={(event) => handleFileInputChange("profile_pic", event)} />
             </div>
+            
 
         </>
     );

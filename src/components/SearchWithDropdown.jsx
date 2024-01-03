@@ -1,31 +1,53 @@
 import { useState } from 'react';
 
-const SearchWithDropdown = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchWithDropdown = ({setProducts}) => {
+  const [productName, setProductName] = useState('');
   const [selectedOption, setSelectedOption] = useState('all'); // Default dropdown option
 
   const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
+    setProductName(event.target.value);
   };
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Perform search based on searchTerm and selectedOption
-    console.log(`Searching for '${searchTerm}' in '${selectedOption}'`);
+    console.log(`Searching for '${productName}' in '${selectedOption}'`);
+
+    try{
+
+      const response= await fetch(`/api/product/search?category=${encodeURIComponent(selectedOption)}&productName=${encodeURIComponent(productName)}`, {
+        method: 'GET',
+        headers:{
+          "Content-Type":"application/json"
+        },
+      })
+
+      if (response.ok){
+        const data= await response.json();
+        // Handle the received data from the server
+        setProducts(data)
+
+      } else{
+        console.log('Server returned and error')
+      }
+
+    }catch(error){
+      console.log("Error", error)
+    }
     
+
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex w-4/5 mx-auto">
       <select value={selectedOption} onChange={handleSelectChange} className='flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100  rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600'>
-        <option value="Computers">Computers</option>
-        <option value="Smart Phones">Smart Phone</option>
+        <option value="all">Select Category</option>
+        <option value="Electronics">Electronics</option>
         <option value="Clothes">Clothes</option>
-        <option value="Shoes">Shoes</option>
         <option value="Furniture">Furniture</option>        
       </select>
       
@@ -33,7 +55,7 @@ const SearchWithDropdown = () => {
         <input className='rounded-e-lg w-full'
           type="search"
           placeholder="Search..."
-          value={searchTerm}
+          value={productName}
           onChange={handleInputChange}
           required
         />

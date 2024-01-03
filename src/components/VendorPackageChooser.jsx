@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 
-const VendorPackageChooser = () => {
+const VendorPackageChooser = ({vendorData, setVendorData}) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
 
   
   const handlePackageSelection = (packageName) => {
     setSelectedPackage(packageName);
+    if (packageName==="Regular"){
+      setVendorData({...vendorData, 'isPremium' : false})
+    }else{
+      setVendorData({...vendorData, 'isPremium' : true})
+    }
     
   };
+
 
   return (
     <div className='w-4/5 mb-5'>

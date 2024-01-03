@@ -1,7 +1,7 @@
 import {useState, useContext} from 'react';
 import { AuthContext } from '../components/AuthContext';
 
-const ProductCatalog = ({products, addToCart}) => {
+const ProductCatalog = ({products, addToCart, cart}) => {
     const [selectedProduct, setSelectedProduct]= useState(null);
     const {isAuthenticated, login}=useContext(AuthContext);
     
@@ -16,25 +16,45 @@ const ProductCatalog = ({products, addToCart}) => {
     const handleAddToCart=(item)=>{
         if (isAuthenticated){
             addToCart(item);
-            console.log('Item added to cart')
+            
         } else{
             console.log("please log in first")
         }
         
     }
 
-    const handleLogin = () => {
-        // Simulating a login action
-        login(); // This will set isAuthenticated to true
-      };
+    // const handleLogin = () => {
+    //     // Simulating a login action
+    //     login(); // This will set isAuthenticated to true
+    // };
+
+    const handleSocialShare = (productName, platform) => {
+        
+        const productUrl = window.location.href; 
+        const message = `Check out this amazing product: ${productName}`;
+
+        switch (platform) {
+            case 'facebook':
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${productUrl}`);
+                break;
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?url=${productUrl}&text=${message}`);
+                break;
+            case 'instagram':
+                window.open(`https://www.instagram.com/`);
+                break;
+            default:
+                break;
+        }
+    };
     
 
     return ( 
         <div className="product-catalog max-w-4xl rounded-lg text-center mx-auto my-20">
             <div className="products w-full grid mx-auto gap-x-4 gap-y-5 cols- grid-cols-2 md:grid-cols-3">
                 {products.map((product)=>(
-                    <div key={product.id} className="product bg-white justify-self-center rounded-lg p-6 w-64 shadow-2xl ">
-                        <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4"/>
+                    <div key={product.id} className="product bg-white justify-self-center rounded-lg p-5 w-64 shadow-2xl ">
+                        <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4"/>
                         <div className="flex flex-wrap gap-3">
                             <h3 className="text-lg font-semibold mb-2">{product.name} </h3>
                             <p className="text-green-600 font-bold">Price: {product.price}Br.</p>
@@ -44,7 +64,14 @@ const ProductCatalog = ({products, addToCart}) => {
                             {selectedProduct === product.id && (
                                 <p className="text-gray-600 mb-2 w-full">{product.description}</p>
                             )}
-                            <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={handleAddToCart(product)} >Add to Cart</button>  
+                            <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={()=>handleAddToCart(product)} >Add to Cart</button> 
+                            <h1 className='font-bold'>Share</h1>
+                            <div className='flex gap-1'>
+                                <button onClick={() => handleSocialShare(product.name, 'facebook')} className="bg-blue-500 text-white p-1 w-full">Facebook</button>
+                                <button onClick={() => handleSocialShare(product.name, 'twitter')} className="bg-blue-400 text-white p-1 w-full">Twitter</button>
+                                <button onClick={() => handleSocialShare(product.name, 'instagram')} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-1 w-1/3">Instagram</button>
+                            </div> 
+                            
                         </div> 
                     </div>
                 ))}
