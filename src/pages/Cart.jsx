@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect, useContext } from "react";
 import { CiShoppingCart } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
-
+import {useHistory} from 'react-router-dom';
 
 const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     
@@ -10,6 +10,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     const [selectedProduct, setSelectedProduct]= useState(null);
     const [quantities, setQuantities] = useState({});
     const [checkoutData, setCheckoutData]= useState({});
+    const history = useHistory();
 
     const handleCheckoutData=(prop, event)=>{
         setCheckoutData({...checkoutData, [prop]: event.target.value})
@@ -24,30 +25,36 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     },[quantities]
     );
 
-    // useEffect(()=>{
-    //     const fetchCart= async ()=>{
-    //         try {
-    //             const response = await fetch(`http:localhost/api/cart?userId=${userId}`, {
-    //                 method: "GET",
-    //                 headers: {
-    //                     'Authorization': `Bearer ${authToken}`,
-     //                    'Content-Type': 'application/json'
-    //                      
-    //                 }
-    //             });
+    useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
     
-    //             if (response.ok) {
-    //                 const cartData = await response.json();
-    //                 setCart(cartData);
-    //                 setCartCount(cartData.length);
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching cart:", error);
-    //         }
-    //     };
-
-    //     fetchCart();
-    // }, [userId])
+        const fetchCart = async () => {
+          try {
+            const response = await fetch(`http://localhost:3000/api/cart`, {
+              method: "GET",
+              headers: {
+                "authToken": authToken,
+              },
+              signal: signal
+            });
+    
+            if (response.ok) {
+              const data = await response.json();
+              setCart(data[0].cart);
+              setCartCount(data[0].cart.length);
+            }
+          } catch (error) {
+            console.error("Error fetching cart:", error);
+          }
+        };
+    
+        fetchCart();
+    
+        return () => {
+          abortController.abort();
+        };
+      }, [userId, cart]);
 
     const calculateTotalPrice = () => {
         let totalPrice = 0;
@@ -60,17 +67,16 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     };
 
 
-    const handleDelete = useCallback(
-        async (productId) => {
-          try {
-            await fetch(`your_backend_url/products/${productId}`, {
-              method: 'DELETE',
-              headers:{
-                 Authorization: `Bearer ${authToken}`,
-                'Content-Type': 'application/json'
-              }
-            });
+    const handleDelete = async (productId) => {
+        try {
+          const response = await fetch(`http://localhost:3000/api/cart/${productId}`, {
+            method: 'DELETE',
+            headers:{
+              "authToken": authToken,
+            }
+          });
       
+          if (response.ok) {
             const updatedCart = cart.filter((item) => item.id !== productId);
             setCart(updatedCart);
       
@@ -80,56 +86,57 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
             });
       
             setCartCount(cartCount - 1);
-          } catch (error) {
-            console.error('Error deleting product:', error);
+          } else {
+            console.error('Failed to delete product');
           }
-        },
-        [cart, cartCount, setCart, setCartCount, setQuantities]
-      );
+        } catch (error) {
+          console.error('Error deleting product:', error);
+        }
+      };
+      
       
 
-    const handleSubmit = useCallback(
-        async (event) => {
+    const handleSubmit = async (event) => {
           event.preventDefault();
       
           const products = cart.map((product) => ({
-            productId: product.id,
+            product: product._id,
             quantity: quantities[product._id] || 1,
         }));
 
         const amount = calculateTotalPrice();
-    
-        const formData = {
-            totalAmount: amount,
+        const orderData = {
+            totalAmount: Number(amount),
             date: checkoutData.date,
-            sendersAccount: checkoutData.senderAccount,
-            productDetails: products, 
+            // sendersAccount: checkoutData.senderAccount,
+            productDetail: products, 
+            location: checkoutData.deliveryLocation
         };
-      
-        console.log(formData); 
+
+        console.log(checkoutData); 
     
         try {
-        const response = await fetch('http:localhost/api/order', {
+        const response = await fetch('http://localhost:3000/api/order', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${authToken}`,
+                "authToken": authToken,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData),
+            body:JSON.stringify(orderData),
         });
     
         if (response.ok) {
             const transaction = await response.json();
+            console.log("success");
+            history.push('/success order')
         } else {
+            history.push('/failed order');
             console.log('Error during transaction');
         }
         } catch (error) {
         console.log("Couldn't make transaction due to", error);
         }
-        },
-        [cart, checkoutData, quantities, calculateTotalPrice]
-    );
-      
+        }
 
     const toggleAccordion=(productId)=>{
         if (selectedProduct===productId){
@@ -152,7 +159,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
             }
             {cart.length>0 && cart.map((product)=>(
                 <div key={product._id} className="product bg-white justify-self-center rounded-lg p-6 w-64 shadow-2xl my-10">
-                    <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4"/>
+                    <img src={product.imageurl} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4"/>
                     <div className="flex flex-wrap gap-3">
                         <h3 className="text-lg font-semibold mb-2">{product.name} </h3>
                         <p className="text-green-600 font-bold">Price: {product.price}Br.</p>

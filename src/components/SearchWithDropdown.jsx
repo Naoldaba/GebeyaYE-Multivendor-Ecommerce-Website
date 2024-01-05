@@ -14,11 +14,9 @@ const SearchWithDropdown = ({setProducts}) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Perform search based on searchTerm and selectedOption
     console.log(`Searching for '${productName}' in '${selectedOption}'`);
 
     try{
-
       const response= await fetch(`/api/product/search?category=${encodeURIComponent(selectedOption)}&productName=${encodeURIComponent(productName)}`, {
         method: 'GET',
         headers:{
@@ -28,7 +26,6 @@ const SearchWithDropdown = ({setProducts}) => {
 
       if (response.ok){
         const data= await response.json();
-        // Handle the received data from the server
         setProducts(data)
 
       } else{
@@ -47,6 +44,7 @@ const SearchWithDropdown = ({setProducts}) => {
       <select value={selectedOption} onChange={handleSelectChange} className='flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100  rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600'>
         <option value="all">Select Category</option>
         <option value="Electronics">Electronics</option>
+        <option value="stationary">Stationary</option>
         <option value="Clothes">Clothes</option>
         <option value="Furniture">Furniture</option>        
       </select>

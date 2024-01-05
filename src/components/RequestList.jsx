@@ -1,53 +1,64 @@
 
 import {useState, useEffect, useContext} from 'react';
-import toy from '../utils/toy.jpg'
 import { AuthContext } from './AuthContext';
 
 const RequestList = () => {
 
     const {authToken} = useContext(AuthContext);
-    const [requests, setRequests] = useState([{
-        name:"Naol Daba Mulleta",
-        email:"nahafile@gmail.com",
-        password:"abcdefgh",
-        phoneNum:"0920375653",
-        address:"Arada",
-        accountNum:'1000307059774',
-        package: 'Regular',
-        licence: toy,
-        profilePic: toy
-    }]);
+    const [requests, setRequests] = useState([]);
 
     useEffect(() => {
-        
-        const fetchRequests = async () => {
-          try {
-            const response = await fetch('your_api_endpoint_here', {
-                headers:{
-                    Autherization: `Bearer ${authToken}`
-                }
-            });
-            if (!response.ok) {
-              throw new Error('Failed to fetch requests');
-            }
-            const data = await response.json();
-            setRequests(data); 
-          } catch (error) {
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+    
+      const fetchRequests = async () => {
+        try {
+          const response = await fetch('http://127.0.0.1:3000/api/user', {
+            method: "GET",
+            headers: {
+              'authToken': authToken,
+              'Content-Type': 'application/json'
+            },
+            signal: signal 
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to fetch requests');
+          }
+          
+          const data = await response.json();
+          console.log(data)
+          const filteredRequests = data.filter(request => request.status !== "approved");
+          setRequests(filteredRequests); 
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            console.log('Request was aborted');
+          } else {
             console.error('Error fetching requests:', error);
           }
-        };
+        }
+      };
     
-        fetchRequests(); 
-      }, []);
+      fetchRequests();
+    
+      return () => {
+        abortController.abort();
+      };
+    }, [authToken]);
+  
+      
+      
+      
 
     const handleApprove = async (requestId) => {
         try {
-            const response = await fetch(`your_approve_endpoint/${requestId}`, {
-                method: 'POST',
+            const response = await fetch(`http://localhost:3000/api/user/changePendding/${requestId} `, {
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    
+                  'authToken': authToken,
+                  'Content-Type': 'application/json',
                 },
+
                 body: JSON.stringify({status: "approved"}),
             });
 
@@ -64,11 +75,12 @@ const RequestList = () => {
 
     return (
         <div>
-            <h2 className='text-4xl text-center my-12'>Requests</h2>
+            <h2 className='text-3xl font-semibold text-center my-12'>Requests</h2>
             {requests.map((request, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6 my-20'>
-                    <div className='flex flex-wrap  items-center'>
-                        <img src={request.profilePic} alt="Profile" className='w-1/2' />
+                    <form className='flex flex-wrap items-center' onSubmit={()=>handleApprove(request._id)}>
+                      {console.log(request.licence)}
+                        <img src={request.licence} alt="Profile" className='w-1/2' />
                         <div>
                             <div className='mb-4'>
                                 <p>Name:</p>
@@ -80,7 +92,7 @@ const RequestList = () => {
                             </div>
                             <div className='mb-4'>
                                 <p>Phone Number:</p>
-                                <p>{request.phoneNum}</p>
+                                <p>{request.phone}</p>
                             </div>
                             
                             <div className='mb-4'>
@@ -89,18 +101,21 @@ const RequestList = () => {
                             </div>
                             <div className='mb-4'>
                                 <p>Account Number:</p>
-                                <p>{request.accountNum}</p>
+                                <p>{request.accountNumber}</p>
                             </div>
                             <div>
                                 <p>Selected Package:</p>
-                                <p>{request.package}</p>
+                                {request.isPremium ? (
+                                  <p>Premium</p>
+                                ): (
+                                  <p>Regular</p>
+                                )}
                             </div>
-                            {/* <img src={request.licence} className='block' /> */}
                         </div>
-
-                    </div>
+                        <button className='bg-blue-500 text-white p-2 w-36'>Approve</button>
+                    </form>
                     
-                    <button onClick={()=>handleApprove(request.id)} className='bg-blue-500 text-white p-2 w-36 mx-auto'>Approve</button>
+                    
                 </div>
                 ))}
 

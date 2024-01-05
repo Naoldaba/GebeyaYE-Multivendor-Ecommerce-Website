@@ -3,30 +3,39 @@ import VendorLogin from "../components/VendorLogin";
 import AdminLogin from "../components/AdminLogin";
 import ecom from "../utils/ecom.jpg";
 import { AuthContext } from "../components/AuthContext";
-import VendorDashboard from "./VendorDashboard";
-import { useContext, useState } from "react";
-import AdminDashboard from "./AdminDashboard";
+import { useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Auth from "../utils/Auth.jpg";
-
+import {useHistory} from "react-router-dom";
 
 
 const Login = () => {
     const [selectedValue, setSelectedValue]=useState('Select Role')
     const [loginData, setLoginData]= useState({})
-    const [loggedInRole, setLoggedInRole] = useState("Buyer");
+    const [loggedInRole, setLoggedInRole] = useState(null);
     const [isDisabled, setIsDisabled]=useState(true);
-    const { isAuthenticated, setUserType, login}=useContext(AuthContext);
+    const { isAuthenticated, setUserType, login,userType}=useContext(AuthContext);
+    const history=useHistory();
 
+    useEffect(() => {
+        const storedUserType = localStorage.getItem('userType');
+        if (storedUserType) {
+            setUserType(storedUserType);
+            setSelectedValue(storedUserType); 
+        }
+    }, []);
 
-    const handleOption=(event)=>{
-        setSelectedValue(()=>event.target.value)
-        if (event.target.value!=="Select Role"){
+    const handleOption = (event) => {
+        const selectedRole = event.target.value;
+        setSelectedValue(selectedRole);
+        if (selectedRole !== "Select Role") {
             setIsDisabled(false);
         }
-        setLoginData({...loginData, ["role"]: event.target.value})
-        setUserType(selectedValue)
-    }
+        setLoginData({ ...loginData, ["role"]: selectedRole });
+        setUserType(selectedRole); 
+        // setSelectedValue(selectedRole)
+    };
+
 
     const handleLoginSuccess = (role) => {
         setLoggedInRole(role); 
@@ -40,13 +49,22 @@ const Login = () => {
                 return;
             }
             console.log(loginData)
-            const success = await login(loginData.name, loginData.password);
+            const success = await login(loginData.name, loginData.password, selectedValue);
     
             if (success) {
                 console.log("Login Successful");
                 handleLoginSuccess(loginData.role);
+                if (userType=="Vendor"){
+                    localStorage.setItem('userType', userType);
+                    history.push('/vendordashboard')
+                }else if(userType=="Admin"){
+                    localStorage.setItem('userType', userType);
+                    history.push('/admindashboard')
+                }
             } else {
+                localStorage.setItem('userType', userType);
                 console.log('Login Failed');
+                history.push('/application status');
             }
     
         } catch (error) {
@@ -70,9 +88,8 @@ const Login = () => {
         <div>
           {isAuthenticated ? (
             <>
-                {loggedInRole === "Vendor" ? <VendorDashboard /> : null}
-                {loggedInRole === "Admin" ? <AdminDashboard /> : null}
-                {loggedInRole === "Buyer" ? (
+        
+                {userType === "Buyer" ? (
                 <div className="flex justify-center flex-wrap text-center ">
                     <img src={Auth} className="w-20"/>
                     <h1 className="w-full text-2xl">You are successfully logged in!!</h1>

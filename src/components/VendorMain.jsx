@@ -1,16 +1,25 @@
 import React, { useContext } from 'react';
 import AddProductForm from './AddProductForm';
 import ProductManagement from './productManagement';
+import VendorProfile from './VendorProfile';
+import BannerComponent from './BannerComponent';
+import SalesReport from './SalesReport';
 
 
-const VendorMain = ({ activeMenu, products }) => {
+const VendorMain = ({ activeMenu, products, profileData}) => {
   
   let content = null;
+  
 
   switch (activeMenu) {
+    case 'profile':
+      content = (
+        <VendorProfile vendorProfile={profileData}/>
+      );
+      break;
     case 'products':
         content = (
-        <ProductManagement/>
+        <ProductManagement products={products}/>
     );
       break;
     case 'addProduct':
@@ -18,8 +27,15 @@ const VendorMain = ({ activeMenu, products }) => {
         <AddProductForm />
       );
       break;
+    case 'addbanner':
+      content = (
+        <BannerComponent/>
+      )
+      break;
     case 'report':
-      content = <div>Report Section</div>;
+      content = (
+        <SalesReport/>
+      )
       break;
     default:
       content = <div>Select an option from the sidebar</div>;

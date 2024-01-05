@@ -4,23 +4,26 @@ import VendorPackageChooser from "./VendorPackageChooser";
 import { useState } from "react";
 
 
-const VendorSignUp = ({vendorData, setVendorData}) => {
+const VendorSignUp = ({setSignUpData, signUpData, setLicence, setProfilePicture}) => {
     const [selectedValue, setSelectedValue]=useState('Select subcity');
 
     const handleOption=(prop, event)=>{
         setSelectedValue(event.target.value)
-        setVendorData({ ...vendorData, [prop]: event.target.value });
+        setSignUpData({ ...signUpData, [prop]: event.target.value });
     }
 
     const handleInputChange = (prop, event) => {
-        setVendorData({ ...vendorData, [prop]: event.target.value });
+        setSignUpData({ ...signUpData, [prop]: event.target.value });
     };
     
-    const handleFileInputChange = async (prop, event) => {
-        const file = event.target.files[0];
-        const formData = new FormData();
-        formData.append(prop, file);
-        setVendorData({ ...vendorData, [prop]: formData });
+    const handleFileInputChange = (prop, event) => {
+        if (prop==="licence"){
+            const licenceFile=event.target.files[0]
+            setLicence(licenceFile);
+        }else{
+            const ppFile=event.target.files[0];
+            setProfilePicture(ppFile);
+        }
     };
 
     return (
@@ -29,6 +32,10 @@ const VendorSignUp = ({vendorData, setVendorData}) => {
             <div className="w-4/5 my-10">
                 <label className="block mb-2 text-lg">Full Name</label>
                 <input className="w-full" type="text" placeholder="Enter full name" required onChange={(event)=>handleInputChange("name", event)} />
+            </div>
+            <div className="w-4/5 mb-5">
+                <label className="block mb-2 text-lg">User Name</label>
+                <input className="w-full" type="text" placeholder="Enter user name" required onChange={(event)=>handleInputChange("username", event)} />
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Email</label>
@@ -40,11 +47,11 @@ const VendorSignUp = ({vendorData, setVendorData}) => {
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Phone Number</label>
-                <input className="w-full" type="number" placeholder="Enter phone number" required onChange={(event)=>handleInputChange("phone_num", event)} />
+                <input className="w-full" type="number" placeholder="Enter phone number" required onChange={(event)=>handleInputChange("phone", event)} />
             </div>
             <div className="w-4/5 mb-5">
                 <h1 className="text-lg">Address</h1>
-                <select className="w-full"  value={selectedValue} onChange={(event)=>handleOption("subcity",event)}  required  >
+                <select className="w-full"  value={selectedValue} onChange={(event)=>handleOption("address",event)}  required  >
                         <option value="">Select Subcity</option>
                         <option value="Addis Ketema">Addis Ketema</option>
                         <option value="Akaky Kaliti">Akaky Kaliti</option>
@@ -61,19 +68,17 @@ const VendorSignUp = ({vendorData, setVendorData}) => {
             
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Account Number</label>
-                <input className="w-full" type="number" placeholder="Credit card number" required onChange={(event)=>handleInputChange("account_number", event)} />
+                <input className="w-full" type="number" placeholder="Credit card number" required onChange={(event)=>handleInputChange("accountNumber", event)} />
             </div>
-            <VendorPackageChooser vendorData={vendorData} setVendorData={setVendorData}/>
+            <VendorPackageChooser signUpData={signUpData} setSignUpData={setSignUpData}/>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Trade Licence</label>
-                <input className="w-full" type="file" placeholder="Upload licence" required onChange={(event) => handleFileInputChange("trade_licence", event)} />
+                <input className="w-full" type="file" name="licence" accept="image/*" placeholder="Upload licence"  onChange={(event) => handleFileInputChange("licence", event)} />
             </div>
             <div className="w-4/5 mb-5">
                 <label className="block mb-2 text-lg">Profile Picture</label>
-                <input className="w-full" type="file" name="image" accept="image/*" placeholder="Upload licence" required onChange={(event) => handleFileInputChange("profile_pic", event)} />
+                <input className="w-full" type="file" name="profilePicture" accept="image/*" placeholder="Upload profile picture"  onChange={(event) => handleFileInputChange("profilePicture", event)} />
             </div>
-            
-
         </>
     );
 }

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-const VendorPackageChooser = ({vendorData, setVendorData}) => {
+const VendorPackageChooser = ({ signUpData, setSignUpData}) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
 
   
   const handlePackageSelection = (packageName) => {
     setSelectedPackage(packageName);
     if (packageName==="Regular"){
-      setVendorData({...vendorData, 'isPremium' : false})
+      setSignUpData({...signUpData, 'isPremium' : false})
     }else{
-      setVendorData({...vendorData, 'isPremium' : true})
+      setSignUpData({...signUpData, 'isPremium' : true})
     }
     
   };

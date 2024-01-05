@@ -1,5 +1,6 @@
 import SearchWithDropdown from "./SearchWithDropdown";
 import Hamburger from "./Hamburger";
+import { MdDashboard } from "react-icons/md";
 import { useContext, useState } from "react";
 import { NavLink } from 'react-router-dom';
 import { FaCartShopping } from "react-icons/fa6";
@@ -11,7 +12,7 @@ import { AuthContext } from "./AuthContext";
 function Nav({cartCount, setProducts}){
 
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
-    const {isAuthenticated,logout}= useContext(AuthContext);
+    const {isAuthenticated,logout, userType}= useContext(AuthContext);
 
     const toggleHamburger = () =>{
         setHamburgerOpen(!hamburgerOpen)
@@ -29,6 +30,8 @@ function Nav({cartCount, setProducts}){
         logout();
         console.log(isAuthenticated)
     }
+
+    const type=localStorage.getItem('userType');
 
 
     return (
@@ -64,28 +67,29 @@ function Nav({cartCount, setProducts}){
                                 
                             </div>
                             <div className="relative">
-                                {isAuthenticated ? (
-                                    <NavLink
-                                        to="/cart"
-                                        activeClassName="border-b-4 border-black rounded"
-                                    >
-                                        <FaCartShopping className="text-2xl text-center w-full" />cart
-                                    </NavLink>
+                            {isAuthenticated === true && type === "Buyer" ? (
+                                <NavLink to="/cart" activeClassName="border-b-4 border-black rounded">
+                                    <FaCartShopping className="text-2xl text-center w-full" /> cart
+                                </NavLink>
+                                ) : isAuthenticated === true && type != null ? (
+                                <NavLink to={`/${type.toLowerCase()}dashboard`} activeClassName="border-b-4 border-black rounded">
+                                    <MdDashboard className="text-2xl text-center w-full cursor-not-allowed" /> Dashboard
+                                </NavLink>
                                 ) : (
-                                    <div
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        <FaCartShopping className="text-2xl text-center w-full cursor-not-allowed" />
-                                        cart
-                                    </div>
+                                <div
+                                    onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    }}
+                                >
+                                    <FaCartShopping className="text-2xl text-center w-full cursor-not-allowed" />
+                                    cart
+                                </div>
                                 )}
 
-                                {isAuthenticated && (
-                                    <span className="absolute -top-5 -right-3 text-xl">{cartCount}</span>
-                                )}
+                                {isAuthenticated === true && type === "Buyer" && (
+                                <span className="absolute -top-5 -right-3 text-xl">{cartCount}</span>
+                            )}
                             </div>
                             
                         </ul>

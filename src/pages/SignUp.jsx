@@ -1,81 +1,78 @@
 import BuyerSignUp from "../components/BuyerSignUp";
 import VendorSignUp from "../components/VendorSignUp"
 import { useState } from "react";
+import {useHistory} from 'react-router-dom';
 
 const SignUp = () => {
 
+
     const [selectedOption, setSelectedOption] = useState("Role");
-    const [buyerData, setBuyerData] = useState({});
-    const [vendorData, setVendorData] = useState({});
+    const [signUpData, setSignUpData] = useState({});
+    const [licence, setLicence]= useState(null);
+    const [profilePicture, setProfilePicture]=useState(null);
+    const history= useHistory();
 
     const handleChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
-
+        const value = event.target.value;
+        setSelectedOption(value);
+      
+        const updatedSignUpData = { ...signUpData, role: value };
+      
+        if (value === "Vendor") {
+          updatedSignUpData.status = "pendding";
+        }
+      
+        setSignUpData(updatedSignUpData);
+      };
+      
     let signUpChoice;
 
     if (selectedOption === "Vendor") {
-        signUpChoice = <VendorSignUp vendorData={vendorData} setVendorData={setVendorData} />;
+        signUpChoice = <VendorSignUp  setSignUpData={setSignUpData} signUpData={signUpData} setLicence={setLicence} setProfilePicture={setProfilePicture} />;
     } else {
-        signUpChoice = <BuyerSignUp buyerData={buyerData} setBuyerData={setBuyerData} />;
+        signUpChoice = <BuyerSignUp setSignUpData={setSignUpData} signUpData={signUpData} />;
     }
-
-    // ... (Previous code remains unchanged)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
-            let formData = new FormData();
-            let url = '';
-
-            console.log('Selected Option:', selectedOption);
-            console.log('Buyer Data:', buyerData);
-            console.log('Vendor Data:', vendorData);
-
-            if (selectedOption === "Buyer" || selectedOption === "Role") {
-                console.log('Appending Buyer Data to FormData:', buyerData);
+          let formData = new FormData();
+    
+          Object.entries(signUpData).forEach(([key, value]) => {
+              formData.append(key, value);
             
-                for (let [key, value] of Object.entries(buyerData)) {
-                    console.log('Appending to FormData:', key, value);
-                    formData.append(key, value);
-                }
-                console.log(formData.get("name"))
-                url = ""; // Set URL here for buyer
-
-            } else if (selectedOption === "Vendor") {
-                Object.entries(vendorData).forEach(([key, value]) => {
-                    console.log('Appending to Vendor FormData:', key, value);
-                    // Assuming profile_pic and trade_licence are files
-                    if (key === "profile_pic" || key === "trade_licence") {
-                        formData.append(key, value[0]); // Assuming only one file is uploaded for each
-                    } else {
-                        formData.append(key, value);
-                    }
-                    formData.append("status", "pending");
-                });
-              
-                url = ""; // Set your URL here for vendor
+          });
+          if (selectedOption==="Vendor"){
+            formData.append("licence", licence);
+            formData.append("profilePicture", profilePicture);  
+          }
+    
+          const response = await fetch("http://127.0.0.1:3000/api/user", {
+            method: "POST",
+            body: formData,
+          });
+    
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          } else{
+            const data = await response.json()
+            console.log(data); 
+            if (selectedOption=="Buyer"){
+              alert(`Dear ${data.name} you are successfully signed up. You can login and continue`);
+              history.push('/login')
+            } else{
+              alert(`Dear ${data.name} your application is successfully sent.`);
+              history.push('/application status');
             }
-
-            console.log('Filled Data:', formData); // Debugging: check formData before sending
-
-            const response = await fetch(url, {
-                method: "POST",
-                body: formData,
-                headers:{
-                    "Content-Type":"multipart/form-data"
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
+          }
+    
         } catch (error) {
-            console.error('Error signing up:', error);
+          alert("Error in signing in")
+          console.error('Opps there is something wrong when signing you up:', error.message);
+          
         }
-    };
-
+      };
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center w-2/3 max-w-lg mx-auto bg-gray-200 my-10 rounded-md">

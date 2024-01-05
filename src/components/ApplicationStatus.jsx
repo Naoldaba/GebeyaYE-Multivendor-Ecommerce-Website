@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { FaRegUser } from "react-icons/fa";
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
@@ -6,32 +6,46 @@ import pending from "../utils/pending.jpg"
 import PaymentForm from './PaymentForm';
 
 const ApplicationStatus = () => {
-  const [name, setName] = useState('');
-  const [status, setStatus] = useState("approved");
-  const [searched, setSearched] = useState(true);
-  const [isPremium, setIsPremium] = useState(true);
+
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState(null);
+  const [searched, setSearched] = useState(null);
+  const [isPremium, setIsPremium] = useState(null);
   const {isAuthenticated} = useContext(AuthContext);
 
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch(`_requests_api_endpoint/${name}`);
+      const response = await fetch('http://localhost:3000/api/user/vendor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: name }),
+      });
+      
       if (!response.ok) {
         throw new Error('Failed to fetch status');
       }
+  
       const data = await response.json();
+      if (!data) {
+        throw new Error('Empty response or invalid JSON');
+      }
+  
       setStatus(data.status);
-      if (data.isPremium){
+      if (data.isPremium) {
         setIsPremium(data.isPremium);
       }
       setSearched(true);
-
     } catch (error) {
       console.error('Error fetching status:', error);
     }
   };
+  
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     fetchStatus();
   };
 
@@ -42,7 +56,7 @@ const ApplicationStatus = () => {
 
     return (
       <div>
-        {status === 'pending' ? (
+        {status === 'pendding' ? (
           <div className=''>
             <img src={pending} className='w-40 mx-auto' />
             <p className='text-2xl'>Your application is pending approval...</p>
@@ -74,7 +88,7 @@ const ApplicationStatus = () => {
       {!searched && (
         <>
           <h1 className='w-full text-center text-2xl mb-4'>View Application Status</h1>
-          <div className='relative mr-2'>
+          <form className='relative mr-2' onSubmit={handleSearch}>
             <FaRegUser className='absolute top-3 text-blue-500 text-xl ml-2' />
             <input
               className="w-full pl-8 focus:outline-none"
@@ -83,8 +97,8 @@ const ApplicationStatus = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <button className='bg-primary my-2 px-4 py-2 text-white rounded' onClick={handleSearch}>Search</button>
-          </div>
+            <button className='bg-primary my-2 px-4 py-2 text-white rounded'>Search</button>
+          </form>
         </>
       )}
       

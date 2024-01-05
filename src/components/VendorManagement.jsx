@@ -1,43 +1,79 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 
-const VendorManagement = ({ vendors }) => {
+const VendorManagement = () => {
+    const [vendors, setVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState(null);
-    const {authToken} = useContext(AuthContext);
+    const { authToken } = useContext(AuthContext);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+
+        const fetchVendors = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/user/approvedVendor', {
+                    method: 'GET',
+                    headers: {
+                        "authToken": authToken,
+                        'Content-Type': 'application/json'
+                    },
+                    signal: signal
+                });
+
+                if (!signal.aborted) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch vendors');
+                    }
+                    const data = await response.json();
+                    setVendors(data);
+                }
+            } catch (error) {
+                if (!signal.aborted) {
+                    console.error('Error fetching vendors:', error);
+                }
+            }
+        };
+
+        fetchVendors();
+
+        return () => {
+            abortController.abort();
+        };
+    }, [authToken]);
 
     const toggleAccordion = (vendorName) => {
         setSelectedVendor((prev) => (prev === vendorName ? null : vendorName));
     };
 
-    const removeVendor = (vendorId, authToken) => {
-        fetch(`your_api_endpoint/vendors/${vendorId}`, {
+    const removeVendor = (vendorId) => {
+        fetch(`http://localhost:3000/api/user/${vendorId}`, {
             method: 'DELETE',
             headers: {
-                 Authorization: `Bearer ${authToken}`,
+                Authorization: `Bearer ${authToken}`,
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            if (response.ok) {
-                console.log(`Vendor with ID ${vendorId} has been removed`);
-            } else {
-                console.error('Failed to remove vendor');
-            }
-        })
-        .catch(error => {
-            console.error('Error while removing vendor:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Vendor with ID ${vendorId} has been removed`);
+                    setVendors(prevVendors => prevVendors.filter(vendor => vendor.id !== vendorId));
+                } else {
+                    console.error('Failed to remove vendor');
+                }
+            })
+            .catch(error => {
+                console.error('Error while removing vendor:', error);
+            });
     };
-    
-    
 
     return (
         <div>
-            <h2 className='text-4xl text-center mb-12'>Vendor List</h2>
+            <h2 className='text-3xl font-semibold text-center mt-6 mb-12'>Vendor List</h2>
             {vendors.map((vendor, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6'>
                 <div className='flex flex-wrap items-center'>
-                    <img src={vendor.profilePic} alt="Profile" className='w-1/2' />
+                    <img src={vendor.profilePicture} alt="Profile" className='w-1/2 mr-6' />
                     <div>
                     <div className='mb-4'>
                         <p>Name: {vendor.name}</p>
@@ -46,7 +82,7 @@ const VendorManagement = ({ vendors }) => {
                         <p>Email: {vendor.email}</p>
                     </div>
                     <div className='mb-4'>
-                        <p>Phone Number: {vendor.phoneNum}</p>
+                        <p>Phone Number: {vendor.phone}</p>
                     </div>
                     <button
                         onClick={() => toggleAccordion(vendor.name)}
@@ -61,16 +97,19 @@ const VendorManagement = ({ vendors }) => {
                             <p>Address: {vendor.address}</p>
                         </div>
                         <div className='mb-4'>
-                            <p>Account Number: {vendor.accountNum}</p>
+                            <p>Account Number: {vendor.accountNumber}</p>
                         </div>
-                        <div>
-                            <p>Selected Package: {vendor.package}</p>
+                        <div>{vendor.isPremium==true ? (
+                                <p>Selected Package: Premium</p>
+                            ) : (
+                                <p>Selected Package: Regular</p>
+                            )}
                         </div>
                         </div>
                     )}
 
                     <button
-                        className='bg-blue-500 text-white p-2 w-full mx-auto'
+                        className='bg-blue-500 text-white p-2 w-full mx-auto mt-4'
                         onClick={() => removeVendor(vendor.id, authToken)} // Pass the vendor ID to the banning function
                         type='button'
                     >

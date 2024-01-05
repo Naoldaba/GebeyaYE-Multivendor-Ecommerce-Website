@@ -3,6 +3,9 @@ import { useState } from 'react';
 import toy from '../utils/toy.jpg';
 import RequestList from './RequestList';
 import VendorManagement from './VendorManagement';
+import AdminAdvertisements from './AdminAdvertisement';
+import AdminOrders from './AdminOrders';
+import AdminPanel from './AdminPanel';
 
 
 
@@ -24,13 +27,13 @@ const vendors=[
 const AdminMain = ({ activeMenu, requests }) => {
   const [selectedVendor, setSelectedVendor]= useState(null);
     
-  const toggleAccordion=(vendorName)=>{
-      if (selectedVendor===vendorName){
-        setSelectedVendor(null);
-      }else{
-        setSelectedVendor(vendorName);
-      }
-  };
+  // const toggleAccordion=(vendorName)=>{
+  //     if (selectedVendor===vendorName){
+  //       setSelectedVendor(null);
+  //     }else{
+  //       setSelectedVendor(vendorName);
+  //     }
+  // };
 
   let content = null;
   
@@ -46,7 +49,19 @@ const AdminMain = ({ activeMenu, requests }) => {
       );
       break;
     case 'advertisments':
-      content = <div>Advertisment Section</div>;
+      content = (
+        <AdminAdvertisements/>
+      )
+      break;
+    case 'orders':
+      content = (
+        <AdminOrders/>
+      )
+      break;
+    case 'questions panel':
+      content = (
+        <AdminPanel/>
+      )
       break;
     default:
       content = <div>Select an option from the sidebar</div>;
