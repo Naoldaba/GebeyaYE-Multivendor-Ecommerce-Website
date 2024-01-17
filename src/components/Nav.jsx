@@ -49,7 +49,7 @@ function Nav({cartCount, setProducts}){
                         <ul className="nav md:flex text-white text-xs gap-6 hidden">
                             <li><NavLink exact to="/" activeClassName="border-b-4 border-black rounded"><GoHomeFill className="text-2xl text-center w-full"/>Home</NavLink></li>
                             <div className="flex flex-wrap justify-center relative">
-                                <li onClick={toggleAccount}><NavLink to=""><RiAccountCircleFill className="text-2xl text-center w-full"/>Account</NavLink></li>
+                                <li onClick={toggleAccount}><RiAccountCircleFill className="text-2xl text-center w-full cursor-pointer"/>Account</li>
                                 {isAuthenticated===false ? (
                                     <div id="account" className="hidden absolute top-12 bg-black text-white text-center text-sm w-24 rounded py-3">
                                         <ul className=""> 
@@ -73,7 +73,7 @@ function Nav({cartCount, setProducts}){
                                 </NavLink>
                                 ) : isAuthenticated === true && type != null ? (
                                 <NavLink to={`/${type.toLowerCase()}dashboard`} activeClassName="border-b-4 border-black rounded">
-                                    <MdDashboard className="text-2xl text-center w-full cursor-not-allowed" /> Dashboard
+                                    <MdDashboard className="text-2xl text-center w-full" /> Dashboard
                                 </NavLink>
                                 ) : (
                                 <div

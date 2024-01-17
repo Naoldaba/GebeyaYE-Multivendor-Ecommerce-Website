@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../components/AuthContext';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
+  const {authToken} = useContext(AuthContext);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/order'); 
+        const response = await fetch('http://localhost:3000/api/order', {
+          method:"GET",
+          headers:{
+            'authToken': authToken
+          }
+        }); 
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
+        
         const data = await response.json();
+        console.log(data)
         setOrders(data); 
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -29,7 +38,7 @@ const AdminOrders = () => {
             <tr className="bg-gray-200">
               <th className="px-4 py-2">Order ID</th>
               <th className="px-4 py-2">Customer</th>
-              <th className="px-4 py-2">Order Date</th>
+              <th className="px-4 py-2">Delivery Date</th>
               <th className="px-4 py-2">Status</th>
               
             </tr>
@@ -37,9 +46,9 @@ const AdminOrders = () => {
           <tbody>
             {orders.map(order => (
               <tr key={order._id} className="border-b border-gray-300">
-                <td className="px-4 py-2">{order.orderId}</td>
-                <td className="px-4 py-2">{order.buyerName}</td>
-                <td className="px-4 py-2">{order.orderDate}</td>
+                <td className="px-4 py-2">{order._id}</td>
+                <td className="px-4 py-2">{order.userName}</td>
+                <td className="px-4 py-2">{order.deliveryDate}</td>
                 <td className="px-4 py-2">{order.status}</td>
               </tr>
             ))}

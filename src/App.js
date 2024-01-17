@@ -15,6 +15,11 @@ import { AuthContext } from "./components/AuthContext";
 import ApplicationStatus from "./components/ApplicationStatus";
 import OrderSuccess from "./components/OrderSuccess";
 import OrderFailed from "./components/OrderFailed";
+import ProductManagement from "./components/productManagement";
+import pendingVendor from "./components/pendingVendor";
+import successBuyer from "./components/successBuyer";
+import failedLogin from "./components/failedLogin";
+import PaymentForm from "./components/PaymentForm";
 
 
 
@@ -84,8 +89,6 @@ function App() {
   };
   
   
-  
-
   return (
     <BrowserRouter>
         <div className="flex flex-col justify-between min-h-screen">
@@ -104,7 +107,7 @@ function App() {
             <Route path="/admindashboard">
               <AdminDashboard />
             </Route>
-            <Route path="/login" component={Login} />
+            <Route exact path="/login" component={Login} />
             <Route path="/logout" component={Logout}/>
             <Route path="/signup" component={SignUp} />
             <Route exact path="/about" component={AboutUs} />
@@ -112,6 +115,13 @@ function App() {
             <Route path="/application status" component={ApplicationStatus}/>
             <Route path="/success order" component={OrderSuccess} />
             <Route path="/failed order" component={OrderFailed} />
+            <Route path="/product management" component={ProductManagement} />
+            <Route path="/login/vendorpending" component={pendingVendor} />
+            <Route path="/login/buyerlogin" component={successBuyer} />
+            <Route path="/login/loginfailed" component={failedLogin} />
+            <Route path="/login/paymentform" component={PaymentForm} />
+
+
           </Switch>
 
           <Footer/>

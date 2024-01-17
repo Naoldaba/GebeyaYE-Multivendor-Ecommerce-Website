@@ -6,7 +6,7 @@ const PaymentForm = () => {
   const [selectedPackage, setSelectedPackage] = useState('');
 
   const handlePayment = () => {
-    // Logic to handle payment goes here
+    
     console.log('Processing payment...');
   };
 

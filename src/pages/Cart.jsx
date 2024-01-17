@@ -100,15 +100,16 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
           event.preventDefault();
       
           const products = cart.map((product) => ({
-            product: product._id,
+            product_id: product._id,
+            product_name:product.name,
             quantity: quantities[product._id] || 1,
+            product_owner: product.owner
         }));
 
         const amount = calculateTotalPrice();
         const orderData = {
             totalAmount: Number(amount),
             date: checkoutData.date,
-            // sendersAccount: checkoutData.senderAccount,
             productDetail: products, 
             location: checkoutData.deliveryLocation
         };

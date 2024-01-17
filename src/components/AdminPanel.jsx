@@ -1,18 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../components/AuthContext';
 
 const AdminPanel = () => {
     const [messages, setMessages] = useState([]);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [reply, setReply] = useState('');
+    const {authToken} = useContext(AuthContext);
 
     useEffect(() => {
-        // Fetch all messages for the admin
         const fetchMessagesForAdmin = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/message/inbox/');
+                const response = await fetch('http://localhost:3000/api/message/inboxes',{
+                    method:"GET",
+                    headers:{
+                        'authToken': authToken
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
-                    setMessages(data.content);
+                    setMessages(data);
                 } else {
                     throw new Error('Failed to fetch messages');
                 }
@@ -31,20 +37,21 @@ const AdminPanel = () => {
 
     const sendReply = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/message/send`, {
+            console.log(selectedMessage._id)
+            const response = await fetch(`http://localhost:3000/api/message/sendreply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'authToken': authToken
                 },
                 body: JSON.stringify({
-                    messageId: selectedMessage._id,
-                    reply,
+                    msg_id: selectedMessage._id,
+                    reply:reply
                 }),
             });
 
             if (response.ok) {
-                // Reply sent successfully
-                // Optionally, refresh message list or mark the message as replied
+                alert('reply sent successfully!!')
                 setReply('');
                 setSelectedMessage(null);
             } else {

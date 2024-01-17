@@ -33,7 +33,7 @@ const Login = () => {
         }
         setLoginData({ ...loginData, ["role"]: selectedRole });
         setUserType(selectedRole); 
-        // setSelectedValue(selectedRole)
+        setSelectedValue(selectedRole)
     };
 
 
@@ -49,22 +49,34 @@ const Login = () => {
                 return;
             }
             console.log(loginData)
-            const success = await login(loginData.name, loginData.password, selectedValue);
+            const success = await login(loginData.name, loginData.password, loginData.role);
     
-            if (success) {
+            if (success==="vendorLogin") {
                 console.log("Login Successful");
-                handleLoginSuccess(loginData.role);
-                if (userType=="Vendor"){
-                    localStorage.setItem('userType', userType);
-                    history.push('/vendordashboard')
-                }else if(userType=="Admin"){
-                    localStorage.setItem('userType', userType);
-                    history.push('/admindashboard')
-                }
-            } else {
                 localStorage.setItem('userType', userType);
-                console.log('Login Failed');
-                history.push('/application status');
+                console.log(userType);
+                handleLoginSuccess(loginData.role);
+                history.push('/vendordashboard')
+                
+            }else if(success==="pendingPayment"){
+                history.push("/login/paymentform")
+            }
+            else if(success==="vendorPending"){
+                history.push('/login/vendorpending')
+            }
+            else if (success==="buyerLogin"){
+                localStorage.setItem('userType', userType);
+                console.log(userType);
+                history.push('/login/buyerlogin')
+            }
+            else if (success==="adminLogin"){
+                localStorage.setItem('userType', userType);
+                console.log(userType);
+                history.push('/admindashboard')
+            }
+            else {
+                console.log('failedlogin')
+                history.push('/login/loginfailed')
             }
     
         } catch (error) {
@@ -86,9 +98,8 @@ const Login = () => {
 
     return (
         <div>
-          {isAuthenticated ? (
+          {/* {isAuthenticated ? (
             <>
-        
                 {userType === "Buyer" ? (
                 <div className="flex justify-center flex-wrap text-center ">
                     <img src={Auth} className="w-20"/>
@@ -96,7 +107,7 @@ const Login = () => {
                     <NavLink to="/" className="text-center text-lg bg-primary text-white p-2 rounded mt-3">Get back to shopping</NavLink>
                 </div>) : null}
             </>
-          ) : (
+          ) : ( */}
             <div className="flex justify-around items-center">
                 <form className="flex flex-col justify-center items-center w-1/2 max-w-sm my-10 rounded-md" onSubmit={handleSubmit}>
                     <h1 className="my-5 text-3xl text-center font-bold"><span className="text-blue-500">Welcome</span> Back to GebeyaYe!</h1>
@@ -116,7 +127,7 @@ const Login = () => {
                     <img src={ecom} className="w-full rounded-2xl"/>
                 </div>
             </div>
-          )}
+          {/* )} */}
         </div>
       );
 }

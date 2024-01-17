@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../components/AuthContext';
+import text_message from '../utils/text_message.jpg';
 
 const MessagePage = ({ userType, userId }) => {
     const [messages, setMessages] = useState([]);
@@ -9,7 +10,12 @@ const MessagePage = ({ userType, userId }) => {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch(`your-api-endpoint/messages/${userType}/${userId}`);
+                const response = await fetch(`http://localhost:3000/api/message/myinbox`, {
+                    method:"GET",
+                    headers:{
+                        'authToken':authToken
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setMessages(data);
@@ -26,23 +32,21 @@ const MessagePage = ({ userType, userId }) => {
 
     const sendMessage = async () => {
         try {
-            const response = await fetch('your-api-endpoint/messages/send', {
+            const response = await fetch('http://localhost:3000/api/message/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'authToken': authToken
                 },
                 body: JSON.stringify({
-                    sender: userId,
-                    // receiver: adminId, 
+                    receiver: "Admin",
                     content: newMessage,
                 }),
             });
 
             if (response.ok) {
-                // Message sent successfully
                 setNewMessage('');
-                // Optionally, refresh message list after sending
+                alert('message successfully sent!!!')
             } else {
                 throw new Error('Failed to send message');
             }
@@ -52,23 +56,25 @@ const MessagePage = ({ userType, userId }) => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="flex justify-center items-center h-screen gap-16">
+            <img src={text_message} className="hidden lg:block w-1/2 max-w-md"/>
+            <div className="w-1/2 bg-white shadow-lg rounded-lg border-4 overflow-hidden max-w-lg">
                 <div className="bg-gray-200 text-gray-700 p-4">
                     <h1 className="text-xl font-semibold">Messages</h1>
                 </div>
                 <div className="px-4 py-2 flex flex-col h-80 overflow-auto">
-                    {/* Render message threads */}
+                    
                     {messages.map((message) => (
-                        <div key={message._id} className="border-b py-2">
-                            {/* Render message details */}
-                            <p className="text-gray-600">{message.content}</p>
+                        <div key={message._id} className="border-b py-2 my-3">
                             <p className="text-xs text-gray-500">{message.timestamp}</p>
+                            <p className="text-gray-600">You- {message.content}</p>
+                            {message.reply && (
+                                <p className="text-gray-600">Admin- {message.reply}</p>
+                            )}
                         </div>
                     ))}
                 </div>
                 <div className="bg-gray-200 p-4">
-                    {/* Render message input */}
                     <textarea
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}

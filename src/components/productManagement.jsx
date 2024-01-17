@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useContext,useCallback } from 'react';
-import bag from "../utils/bag.avif"
 import { AuthContext } from './AuthContext';
+import {useHistory} from 'react-router-dom';
 
 const ProductManagement = () => {
   const {authToken} = useContext(AuthContext);
   const [price, setPrice]=useState(null);
   const [stock, setStock]=useState(null);
   const [updatedProductData, setUpdatedProductData] = useState({});
-  // const [name, setName]=useState(null);
-  // const [category, setCategory]=useState(null);
-  // const [description, setDescription]=useState(null);
-  // const [imageurl, setImageurl]=useState(null);
-  // const [owner, setOwner]=useState(null);
 
   const [products, setProducts] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -102,6 +98,7 @@ const ProductManagement = () => {
         }
         console.log('Product price updated successfully');
         alert("product updated!")
+        history.push('/product management');
       })
       .catch((error) => {
         console.error('Error updating product price:', error);

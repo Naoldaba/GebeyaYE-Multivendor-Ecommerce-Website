@@ -40,7 +40,7 @@ const OrderSuccess = () => {
                     <ul className="list-disc ml-6">
                         {order.products.map((product, index) => (
                             <li key={index} className="text-gray-700">
-                                Product ID: {product.product}, Quantity: {product.quantity}
+                                Product Name: {product.product_name}, Quantity: {product.quantity}
                             </li>
                         ))}
                     </ul>

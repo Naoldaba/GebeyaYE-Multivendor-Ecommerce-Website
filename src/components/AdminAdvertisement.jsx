@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from './AuthContext';
+import {useHistory} from 'react-router-dom';
 
 const AdminAdvertisements = () => {
 
     const [advertisements, setAdvertisements] = useState([]);
     const [loading, setLoading] = useState(true);
     const { authToken } = useContext(AuthContext);
+    const history = useHistory();
   
     const handleApproval = async (advertisementId, approved) => {
       try {
@@ -21,7 +23,31 @@ const AdminAdvertisements = () => {
         if (!response.ok) {
           throw new Error('Failed to update advertisement approval');
         }
-        setAdvertisements(advertisements.filter(ad => ad.id !== advertisementId));
+        alert('advert approved successfully');
+        setAdvertisements(advertisements.filter(ad => ad._id !== advertisementId));
+        history.push('/admindashboard')
+      } catch (error) {
+        console.error('Error updating advertisement approval:', error);
+      }
+    };
+
+    const handleDelete = async (advertisementId, rejected) => {
+      try {
+        const response = await fetch(`http://localhost:3000/api/advert/${advertisementId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'authToken': authToken,
+          },
+          body: JSON.stringify({ rejected }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update advertisement approval');
+        }
+        alert('advert rejected successfully')
+        setAdvertisements(advertisements.filter(ad => ad._id !== advertisementId));
+        history.push('/admindashboard')
       } catch (error) {
         console.error('Error updating advertisement approval:', error);
       }
@@ -39,8 +65,7 @@ const AdminAdvertisements = () => {
           },
           signal: signal,
         });
-        console.log(authToken);
-  
+        
         if (!signal.aborted) {
           if (!response.ok) {
             throw new Error('Failed to fetch advertisements');
@@ -64,7 +89,7 @@ const AdminAdvertisements = () => {
     return () => {
       abortController.abort();
     };
-  }, [authToken]);
+  }, [authToken, advertisements]);
   
 
   return (
@@ -77,15 +102,15 @@ const AdminAdvertisements = () => {
           {advertisements.map((advertisement) => (
             <div key={advertisement.id} className="bg-gray-200 p-4 rounded-md">
               <img
-                src={advertisement.image}
+                src={advertisement.banner}
                 alt="Advertisement"
                 className="w-full h-40 object-cover mb-2 rounded-md"
               />
-              <p className="text-gray-800 font-semibold">{advertisement.title}</p>
+              <p className="text-gray-800 font-semibold">{advertisement.userName}</p>
               <p className="text-gray-600">{advertisement.description}</p>
               <div className="flex justify-between mt-2">
-                <button onClick={() => handleApproval(advertisement.id, true)}>Approve</button>
-                <button onClick={() => handleApproval(advertisement.id, false)}>Reject</button>
+                <button onClick={() => handleApproval(advertisement._id, true)}>Approve</button>
+                <button onClick={() => handleDelete(advertisement._id, true)}>Reject</button>
               </div>
             </div>
           ))}

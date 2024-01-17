@@ -1,67 +1,81 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 
-const SalesReport = ({ vendorId }) => {
-  const [products, setProducts] = useState([]);
-  const {authToken} = useContext(AuthContext);
+const SalesReportPage = () => {
+  const { authToken } = useContext(AuthContext);
+  const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-  
-    const fetchVendorProducts = async () => {
+    
+    const fetchSalesData = async () => {
       try {
-        const response = await fetch(`YOUR_API_ENDPOINT/vendors/${vendorId}/products`, {
+        const response = await fetch('http://127.0.0.1:3000/api/order/sales_report', {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${authToken}`
+            'authToken': authToken,
           },
-          signal: signal
         });
 
-        if (!signal.aborted) {
-          if (response.ok) {
-            const data = await response.json();
-            setProducts(data);
-          } else {
-            console.error('Failed to fetch products');
-          }
+        if (response.ok) {
+          const data = await response.json();
+          setSalesData(data);
+        } else {
+          console.error('Failed to fetch sales data');
         }
-        
       } catch (error) {
-        if (!signal.aborted) {
-          console.error('Error fetching products:', error);
-        }
+        console.error('Error fetching sales data:', error);
       }
     };
-  
-    fetchVendorProducts();
-  
-    return () => {
-      abortController.abort();
-    };
-  }, [vendorId, authToken]);
-  
+
+    fetchSalesData();
+  }, [authToken]);
 
   return (
-    <div>
-      <h2 className="text-3xl font-semibold mb-4">Products Sold by Vendor</h2>
-      <div className="grid grid-cols-3 gap-4">
-      {products.map((product, index) => (
-        <div key={index} className="border border-gray-300 p-4 rounded-lg">
-          <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-          <p className="text-gray-600 mb-2">{product.description}</p>
-          <div className="flex justify-between items-center">
-            <span className="text-blue-500 text-sm">Price: ${product.price}</span>
-            <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none">
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
+    <div className="container mx-10 my-8">
+      <h2 className="text-3xl font-bold mb-6">Sales Report</h2>
+
+      {salesData.length === 0 ? (
+        <p>No sales data available.</p>
+      ) : (
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 px-4 py-2">Order ID</th>
+              <th className="border border-gray-300 px-4 py-2">Product Name</th>
+              <th className="border border-gray-300 px-4 py-2">Quantity Sold</th>
+              <th className="border border-gray-300 px-4 py-2">Total Revenue</th>
+              <th className="border border-gray-300 px-4 py-2">Delivery Date</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {salesData.map((sale) => (
+              <tr key={sale._id}>
+                <td className="border border-gray-300 px-4 py-2">{sale._id}</td>
+                <td>
+                  {sale.products.map((product, index) => (
+                    <div key={index} className="flex flex-col">
+                      <p className="border border-gray-300 px-4 py-2">{product.product_name}</p>
+                    </div>
+                  ))}
+                </td>
+                <td>
+                  {sale.products.map((product, index) => (
+                    <div key={index} className="flex flex-col">
+                      <p className="border border-gray-300 px-4 py-2">{product.quantity}</p>
+                    </div>
+                  ))}
+                </td>
+                
+                <td className="border border-gray-300 px-4 py-2">{sale.totalAmount}Br.</td>
+                <td className="border border-gray-300 px-4 py-2">{sale.deliveryDate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
 
-export default SalesReport;
+export default SalesReportPage;

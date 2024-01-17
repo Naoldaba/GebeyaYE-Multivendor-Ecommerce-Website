@@ -13,11 +13,11 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             return storedToken;
         }
-        return null;
+        return null;    
     });
     const history=useHistory();
     
-    const login = async (name, password, selectedRole) => {
+    const login = async (name, password, role) => {
         try {
             const response = await fetch('http://127.0.0.1:3000/api/auth', {
                 method: 'POST',
@@ -26,54 +26,61 @@ export const AuthProvider = ({ children }) => {
                 },
                 body: JSON.stringify({
                     name: name,
-                    password: password
+                    password: password,
                 }),
             });
     
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.token);
+                console.log(data);
                 if (data.token) {
-                    if (selectedRole === 'Vendor') {
-                        const getRequest = await fetch('http://127.0.0.1:3000/api/user/vendor', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                "authToken": authToken
-                            },
-                            body:JSON.stringify({name:name})
-                        });
-                        if (getRequest.ok) {
-                            const statusData = await getRequest.json();
-                            console.log(statusData[0].status)
-                            if (statusData[0].status === 'approved') {
+                    const userDetailsResponse = await fetch('http://127.0.0.1:3000/api/user/me', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "authToken": data.token
+                        },
+                    });
+                    if (userDetailsResponse.ok){
+                        const userDetails= await userDetailsResponse.json();
+                    
+                        if (userDetails[0].role === role) {
+                            if (role === 'Vendor' && userDetails[0].status === 'approved') {
+                                if (userDetails[0].payment==="pendding"){
+                                    return "pendingPayment"
+                                }
                                 setAuthToken(data.token);
                                 localStorage.setItem('authToken', data.token);
                                 setIsAuthenticated(true);
-                                return true; 
+                                return "vendorLogin";
+                            } else if(role==="Vendor" && userDetails[0].status==='pendding'){
+                                return "vendorPending";
+                            }
+                            else if (role === 'Buyer') {
+                                setAuthToken(data.token);
+                                localStorage.setItem('authToken', data.token);
+                                setIsAuthenticated(true);
+                                return "buyerLogin";
+                            } else if (role === 'Admin') {
+                                setAuthToken(data.token);
+                                localStorage.setItem('authToken', data.token);
+                                setIsAuthenticated(true);
+                                return "adminLogin";
                             } 
-                            return false
                         } else {
-                            console.error('Failed to fetch vendor status');
-                            return false;
+                            return "roleMismatch";
                         }
-                    } else {
-                        setAuthToken(data.token);
-                        localStorage.setItem('authToken', data.token);
-                        
-                        setIsAuthenticated(true);
-                        return true;
                     }
                 } else {
-                    return false;
+                    return "failedLogin";
                 }
             } else {
                 console.error('Authentication failed');
-                return false;
+                return "failedLogin";
             }
         } catch (error) {
             console.error('Error during authentication:', error);
-            return false;
+            return "failedLogin";
         }
     };
     

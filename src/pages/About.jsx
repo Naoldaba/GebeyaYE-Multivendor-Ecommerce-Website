@@ -23,7 +23,7 @@ owners and online shoppers.</p>
                 <img src={toy} className="w-1/3 h-64 max-w-max " />
                 <img src={shoe} className="w-1/3 h-64 max-w-max " />
             </div>
-            <Link className="bg-blue-500 text-white text-xl p-1 rounded w-20 my-10" to="/about/contact">Contact</Link>
+            <Link className=" text-blue-500 font-semibold text-xl p-1 w-20 my-10" to="/about/contact">Contact</Link>
         </div>
     );
 }

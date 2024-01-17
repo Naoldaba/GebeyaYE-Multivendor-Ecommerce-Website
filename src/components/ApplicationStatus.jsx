@@ -21,7 +21,7 @@ const ApplicationStatus = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: name }),
+        body: JSON.stringify({ name: name }),
       });
       
       if (!response.ok) {
@@ -32,10 +32,10 @@ const ApplicationStatus = () => {
       if (!data) {
         throw new Error('Empty response or invalid JSON');
       }
-  
-      setStatus(data.status);
-      if (data.isPremium) {
-        setIsPremium(data.isPremium);
+      console.log(data)
+      setStatus(data[0].status);
+      if (data[0].isPremium) {
+        setIsPremium(data[0].isPremium);
       }
       setSearched(true);
     } catch (error) {
@@ -77,7 +77,7 @@ const ApplicationStatus = () => {
             </>
           )
         ) : (
-          <h1>No application sent.</h1>
+          <h1>You didn't SignUp.</h1>
         )}
       </div>
     );
