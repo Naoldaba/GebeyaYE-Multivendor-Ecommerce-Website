@@ -46,7 +46,8 @@ const AdminPanel = () => {
                 },
                 body: JSON.stringify({
                     msg_id: selectedMessage._id,
-                    reply:reply
+                    reply:reply,
+                    isRead:true
                 }),
             });
 
@@ -66,12 +67,15 @@ const AdminPanel = () => {
         <div className="flex justify-center items-center bg-gray-100 w-2/3">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="bg-gray-800 text-white py-4 px-6">
-                    <h1 className="text-2xl font-semibold">Admin Panel</h1>
+                    <h1 className="text-2xl font-semibold">Questions Panel</h1>
                 </div>
                 <div className="flex">
+                    {messages.length==0 && (
+                        <p className='font-semibold m-3'>No Pending Messages!</p>
+                    )}
                     <div className="w-1/3 border-r overflow-y-auto">
                         <ul>
-                            {messages.map((message) => (
+                            {messages.length>0 && messages.map((message) => (
                                 <li
                                     key={message._id}
                                     onClick={() => selectMessage(message)}

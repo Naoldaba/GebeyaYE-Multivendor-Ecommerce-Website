@@ -87,8 +87,6 @@ const SignUp = () => {
             </div>
 
             {signUpChoice}
-            
-            <button className="bg-primary my-10 px-4 py-2 text-white rounded" >Sign Up</button>
         </form>
     );
 }

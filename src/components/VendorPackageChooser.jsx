@@ -27,7 +27,7 @@ const VendorPackageChooser = ({ signUpData, setSignUpData}) => {
             checked={selectedPackage === 'Regular'}
             className='mr-3'
             onChange={() => handlePackageSelection('Regular')}
-          />Regular - ----------
+          />Regular - No Ad posting
         </label>
       </div>
       <div className='mb-5'>
@@ -40,7 +40,7 @@ const VendorPackageChooser = ({ signUpData, setSignUpData}) => {
             className='mr-3'
             onChange={() => handlePackageSelection('Premium')}
           />
-          Premium - ---------
+          Premium - Viral Ad posting
         </label>
       </div>
       

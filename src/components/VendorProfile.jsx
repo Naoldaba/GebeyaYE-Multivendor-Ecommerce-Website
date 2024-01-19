@@ -16,7 +16,6 @@ const VendorProfile = ({ vendorProfile }) => {
         {vendorProfile.map((profile) => (
           <div key={profile.id} className="grid grid-cols-2 gap-4 text-white">
             <div>
-              <p className="text-gray-300 font-semibold">Profile Picture:</p>
               <img src={profile.profilePicture} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
             </div>
             <div>

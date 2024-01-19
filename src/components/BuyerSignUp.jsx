@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const BuyerSignUp = ({signUpData, setSignUpData}) => {
 
@@ -34,6 +33,7 @@ const BuyerSignUp = ({signUpData, setSignUpData}) => {
                 <label className="block mb-2 text-lg">Account Number</label>
                 <input className="w-full" type="text" placeholder="Credit card number" required onChange={(event)=>handleData("accountNumber",event)}/>
             </div>
+            <button className="bg-primary my-10 px-4 py-2 text-white rounded" >Sign Up</button>
         </>
     );
 }

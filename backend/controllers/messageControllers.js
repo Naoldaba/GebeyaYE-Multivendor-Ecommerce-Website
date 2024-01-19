@@ -43,7 +43,8 @@ const getAllMessages = async (req,res)=>{
   try{ 
     const userId= req.user.id;
     const messages= await Message.find({
-      receiver: "Admin"
+      receiver: "Admin",
+      isRead:false
     })
     .sort({timestamp:-1})
     res.status(200).send(messages)
@@ -61,7 +62,7 @@ const sendReply= async (req, res)=>{
 
     if (req.body.reply){
       msg.reply= req.body.reply
-
+      msg.isRead=req.body.isRead
     }
 
     msg = await msg.save()
