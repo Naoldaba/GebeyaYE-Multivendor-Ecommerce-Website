@@ -12,7 +12,7 @@ const advert = require("./routes/advertisment");
 const message = require("./routes/message");
 const payment = require("./routes/payment");
 
-// const mongoURL ="mongodb+srv://eyobderese:jobman2008@cluster0.32apy9n.mongodb.net/?retryWrites=true&w=majority";
+
 const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
 mongoose
   .connect(mongoURL)

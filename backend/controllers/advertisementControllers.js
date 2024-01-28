@@ -45,7 +45,7 @@ const getAdvert = async (req, res) => {
     const pendingAdvertisements = await Advertisement.find({
       status: "Pending",
     }).exec();
-      return res.status(200).send(pendingAdvertisements);
+    return res.status(200).send(pendingAdvertisements);
   } catch (error) {
     console.error("Error retrieving advertisements:", error);
     throw error;
@@ -77,11 +77,12 @@ const deleteAdvert = async (req, res)=>{
     const deletedAdvert= await Advertisement.findByIdAndDelete(advertId);
     
     if (!deletedAdvert){
-      res.status(400).send('Product not found');
+      return res.status(400).send('Product not found');
     }
+    return res.status(200).send('product succussfully deleted');
   } catch {
     console.log('Unable to delete product');
-    res.status(500).send("Internal server error");
+    return res.status(500).send("Internal server error");
   }
 }
 

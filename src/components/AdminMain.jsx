@@ -48,7 +48,7 @@ const AdminMain = ({ activeMenu, requests }) => {
         <VendorManagement vendors={vendors}/>
       );
       break;
-    case 'advertisments':
+    case 'advertisements':
       content = (
         <AdminAdvertisements/>
       )
@@ -63,8 +63,8 @@ const AdminMain = ({ activeMenu, requests }) => {
         <AdminPanel/>
       )
       break;
-    default:
-      content = <div>Select an option from the sidebar</div>;
+    // default:
+    //   content = <div>Select an option from the sidebar</div>;
   }
 
   return <div className="main-section col-span-7 flex justify-center items-center ">{content}</div>;

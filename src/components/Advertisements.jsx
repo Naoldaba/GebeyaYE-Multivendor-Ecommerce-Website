@@ -25,10 +25,12 @@ const Advertisements = () => {
     };
 
     fetchAdvertisements();
+    
+
   }, []);
 
   return (
-    <div className="advertisements w-full mb-12 lg:mb-0 lg:w-1/5 flex flex-row gap-4 lg:flex-col items-center mx-2 ">
+    <div className="advertisements w-full mb-12 lg:mb-0 lg:w-1/5 flex flex-row justify-center lg:justify-normal gap-4 lg:flex-col items-center mx-2 ">
       {/* <h2 className='text-2xl font-semibold'>Advertisements</h2> */}
       {advertisements.map((advert) => (
         <div key={advert._id} className="advertisement mb-2">

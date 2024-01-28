@@ -39,7 +39,7 @@ const userRegister = async (req, res) => {
       isPaid,
       isPremium,
       address,
-      status, // this is optional do I have to chack wather the validate value have a address properte
+      status, 
     });
 
     if (role == "Vendor") {

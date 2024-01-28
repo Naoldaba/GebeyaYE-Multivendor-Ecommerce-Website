@@ -16,7 +16,7 @@ const AdminDashboard = () => {
                     method: "GET",
                     headers:{
                         "Content-Type":"application/json",
-                        Autherization: `Bearer ${authToken}`
+                        'authToken': authToken
                     }
                     
                 })
@@ -24,6 +24,7 @@ const AdminDashboard = () => {
                 if (response.ok){
                     const venRequests= await response.json()
                     setVendorRequests(venRequests);
+                    
                 } else{
                     console.log("Error while fetching")
                 }
