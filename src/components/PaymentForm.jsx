@@ -1,55 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {useHistory} from "react-router-dom";
+import Dialogbox from './Dialogbox';
 
 const PaymentForm = () => {
   const [selectedBank, setSelectedBank] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [selectedPackage, setSelectedPackage] = useState(0);
   const [username, setUsername]= useState('');
+  const [showDialog, setShowDialog] = useState(false); 
+  const [verificationCode, setVerificationCode] = useState('');
   const history= useHistory();
 
-  const handlePayment = () => {
+  const handleDialogSubmit = (code) => {
+    setVerificationCode(code);
+    setShowDialog(false);
+  };
+
+  const handlePayment = async () => {
     console.log('Processing payment...');
-    console.log({accountNumber:accountNumber, balance:Number(selectedPackage), username:username})
+    console.log({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username });
     fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body:JSON.stringify({accountNumber:accountNumber, balance:Number(selectedPackage), username:username})
+      body: JSON.stringify({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username })
     })
-    .then((response)=>{
-      if (response.ok){
-        const verifyCode= prompt('We sent Verification code to your email. Please Enter the verification code')
-        fetch('http://127.0.0.1:3000/api/payment/pay', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({accountNumber:accountNumber, balance:Number(selectedPackage), username:username, verificationCode:verifyCode})
-        })
-        .then((response)=>{
-          if (response.ok){
-            alert("Payment Successfull");
+      .then((response) => {
+        if (response.ok) {
+          setShowDialog(true);
+        } else {
+          alert("Something went wrong, please try again.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  };
+
+  // Handle payment after verification code is set
+  useEffect(() => {
+    if (verificationCode) {
+      fetch('http://127.0.0.1:3000/api/payment/pay', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username, verificationCode: verificationCode })
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Payment Successful");
             history.push('/login');
-          } else{
-            return response.text().then(text=>{
+          } else {
+            return response.text().then(text => {
               throw new Error(text);
-            }) 
+            })
           }
         })
-        .catch ((error)=>{
-          alert(error.message)
-          history.push('/')
-        })
-      } else{
-        alert("something went wrong, pls try again.");
-      }
-    })
-    .catch((error)=>{
-      console.log(error);
-    })
-  };
+        .catch((error) => {
+          alert(error.message);
+          history.push('/');
+        });
+    }
+  }, [verificationCode]);
 
   return (
     <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-md shadow-lg">
@@ -113,6 +127,7 @@ const PaymentForm = () => {
       >
         Pay Now
       </button>
+      {showDialog && <Dialogbox onDialogSubmit={handleDialogSubmit}/>}
     </div>
   );
 };

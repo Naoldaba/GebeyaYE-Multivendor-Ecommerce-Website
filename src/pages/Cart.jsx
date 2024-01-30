@@ -3,6 +3,7 @@ import { CiShoppingCart } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../components/AuthContext";
 import {useHistory} from 'react-router-dom';
+import Dialogbox from "../components/Dialogbox";
 
 const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     
@@ -10,7 +11,14 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     const [selectedProduct, setSelectedProduct]= useState(null);
     const [quantities, setQuantities] = useState({});
     const [checkoutData, setCheckoutData]= useState({});
+    const [showDialog, setShowDialog] = useState(false); 
+    const [verificationCode, setVerificationCode] = useState('');
     const history = useHistory();
+
+    const handleDialogSubmit = (code) => {
+      setVerificationCode(code);
+      setShowDialog(false);
+    };
 
     const handleCheckoutData=(prop, event)=>{
         setCheckoutData({...checkoutData, [prop]: event.target.value})
@@ -95,25 +103,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
       };
       
       const handleSubmit = async (event) => {
-          event.preventDefault();
-      
-          const products = cart.map((product) => ({
-            product_id: product._id,
-            product_name:product.name,
-            quantity: quantities[product._id] || 1,
-            product_owner: product.owner
-        }));
-
-        console.log(products);
-
-        const amount = calculateTotalPrice();
-        const orderData = {
-            totalAmount: Number(amount),
-            date: checkoutData.date,
-            productDetail: products, 
-            location: checkoutData.deliveryLocation
-        };
-
+        event.preventDefault();
         console.log(checkoutData.senderAccount); 
         
         fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
@@ -125,41 +115,8 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
         })
         .then((response)=>{
           if (response.ok){
-            const verifyCode= prompt('We sent Verification code to your email. Please Enter the verification code')
-            fetch('http://127.0.0.1:3000/api/payment/purchase', {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({accountNumber:checkoutData.senderAccount, amount:amount, verificationCode:verifyCode})
-            })
-            .then((response)=>{
-              if (response.ok){
-                alert("Payment Successfull");
-                fetch('http://localhost:3000/api/order', {
-                  method: 'POST',
-                  headers: {
-                      "authToken": authToken,
-                      'Content-Type': 'application/json'
-                  },
-                  body:JSON.stringify(orderData),
-                })
-                .then((response)=>{
-                  if (response.ok){
-                    history.push('/success order')
-                  } else{
-                    history.push('/failed order');
-                  }
-                    
-                })
-                .catch(error=>alert(error));
-              } else{
-                return response.text().then(text => {
-                  throw new Error(text);
-                });
-              }
-            })
-            .catch (error=>alert(error.message))
+            
+            setShowDialog(true);
           } else{
             return response.text().then(text=>{
               throw new Error(text);
@@ -170,6 +127,60 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
           alert(error.message);
         })
       }
+
+      useEffect(()=>{
+        if (verificationCode){
+          const products = cart.map((product) => ({
+            product_id: product._id,
+            product_name:product.name,
+            quantity: quantities[product._id] || 1,
+            product_owner: product.owner
+          }));
+
+          const amount = calculateTotalPrice();
+          const orderData = {
+              totalAmount: Number(amount),
+              date: checkoutData.date,
+              productDetail: products, 
+              location: checkoutData.deliveryLocation
+          };
+
+          fetch('http://127.0.0.1:3000/api/payment/purchase', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({accountNumber:checkoutData.senderAccount, amount:amount, verificationCode:verificationCode})
+          })
+          .then((response)=>{
+            if (response.ok){
+              alert("Payment Successfull");
+              fetch('http://localhost:3000/api/order', {
+                method: 'POST',
+                headers: {
+                    "authToken": authToken,
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify(orderData),
+              })
+              .then((response)=>{
+                if (response.ok){
+                  history.push('/success order')
+                } else{
+                  history.push('/failed order');
+                }
+                  
+              })
+              .catch(error=>alert(error));
+            } else{
+              return response.text().then(text => {
+                throw new Error(text);
+              });
+            }
+          })
+          .catch (error=>alert(error.message))
+        }
+      }, [verificationCode])
 
     const toggleAccordion=(productId)=>{
         if (selectedProduct===productId){
@@ -236,6 +247,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
                     <button className="bg-blue-500 text-white w-full my-10 p-1" type="submit">Proceed to Checkout</button>  
                 </form>
             }
+            {showDialog && <Dialogbox onDialogSubmit={handleDialogSubmit}/>}
         </div>
     );
 }

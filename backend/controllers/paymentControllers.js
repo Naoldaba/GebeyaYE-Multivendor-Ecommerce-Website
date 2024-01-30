@@ -2,33 +2,7 @@ const BankAccount = require("../models/BankAccount");
 const nodemailer = require('nodemailer');
 const UserVerification = require('../models/UserVerification');
 const { User } = require("../models/User");
-
-// const PAYMENT_FOR_PREMIUM = 3500;
-// const premiumPayment = async (req, res) => {
-//   try {
-//     const accountNumber = req.body.accountNumber;
-//     const userName = req.body.name;
-
-//     let account = await BankAccount.findOne({ accountNumber: accountNumber });
-
-//     if (!account || account.balance < PAYMENT_FOR_PREMIUM) {
-//       return res.status(404).send("account not found");
-//     }
-
-//     account.balance-= PAYMENT_FOR_PREMIUM;
-
-//     account = await account.save();
-
-//     const user = await User.findOne({ username: userName });
-//     user.payment = "Approved";
-//     const savedUser = await user.save();
-
-//     res.status(200).send(savedUser);
-//   } catch (error) {
-//     console.error("Error fetching account:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
+require('dotenv').config();
 
 
 //sendVerficationEmail
@@ -40,17 +14,17 @@ async function sendVerificationEmail(email, verificationCode) {
       port: 587,
       secure: false,
       auth: {
-        user: 'gebeyaye@gmail.com',
-        pass: 'avoe yuqh mnfm lgfz'
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
       },
       tls: {
         rejectUnauthorized: false
       }
     });
     const mailOptions = {
-      from: 'gebeyaye@gmail.com',
+      from: process.env.EMAIL,
       to: email,
-      subject: 'Verification Code for Premium Payment',
+      subject: 'Verification Code for Your Payment',
       text: `Your verification code is: ${verificationCode}`,
     };
 
