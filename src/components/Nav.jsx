@@ -127,6 +127,11 @@ function Nav({cartCount, setProducts}){
                 #account{
                     display: ${accountClick ? "block" : "none"}
                 }
+                @media (min-width:768px){
+                    #dropdown{
+                        display: none;
+                    }
+                }
             `}</style>
         </>
     )

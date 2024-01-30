@@ -1,9 +1,11 @@
 const express = require("express");
-const uplode = require("../middleware/Upload");
+const upload = require("../middleware/Upload");
 const router = express.Router();
 
-const { premiumPayment } = require("../controllers/paymentControllers");
+const { performPremiumPayment, verifyAccount, performProductPayment } = require("../controllers/paymentControllers");
 
-router.post("/premium", uplode.none(), premiumPayment);
+router.post("/verifyaccount",upload.none(), verifyAccount);
+router.post('/pay', upload.none(), performPremiumPayment );
+router.post('/purchase', upload.none(), performProductPayment)
 
 module.exports = router;
