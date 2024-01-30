@@ -1,19 +1,72 @@
 import { useState } from 'react';
+import {useHistory} from "react-router-dom";
 
 const PaymentForm = () => {
   const [selectedBank, setSelectedBank] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [selectedPackage, setSelectedPackage] = useState('');
+  const [selectedPackage, setSelectedPackage] = useState(0);
+  const [username, setUsername]= useState('');
+  const history= useHistory();
 
   const handlePayment = () => {
-    
     console.log('Processing payment...');
+    console.log({accountNumber:accountNumber, balance:Number(selectedPackage), username:username})
+    fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({accountNumber:accountNumber, balance:Number(selectedPackage), username:username})
+    })
+    .then((response)=>{
+      if (response.ok){
+        const verifyCode= prompt('We sent Verification code to your email. Please Enter the verification code')
+        fetch('http://127.0.0.1:3000/api/payment/pay', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({accountNumber:accountNumber, balance:Number(selectedPackage), username:username, verificationCode:verifyCode})
+        })
+        .then((response)=>{
+          if (response.ok){
+            alert("Payment Successfull");
+            history.push('/login');
+          } else{
+            return response.text().then(text=>{
+              throw new Error(text);
+            }) 
+          }
+        })
+        .catch ((error)=>{
+          alert(error.message)
+          history.push('/')
+        })
+      } else{
+        alert("something went wrong, pls try again.");
+      }
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
   };
 
   return (
     <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-md shadow-lg">
       <h1 className="text-3xl font-bold text-center mb-6">Payment Details</h1>
       <div className="mb-4">
+        <div className="mb-4">
+        <label htmlFor="username" className="block text-lg mb-2">Username</label>
+        <input
+          id="username"
+          type="text"
+          className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none bg-gray-100"
+          placeholder="Enter username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
         <label htmlFor="bank" className="block text-lg mb-2">Select Bank</label>
         <select
           id="bank"
@@ -36,8 +89,10 @@ const PaymentForm = () => {
           placeholder="Enter account number"
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
+          required
         />
       </div>
+      
       <div className="mb-4">
         <label htmlFor="package" className="block text-lg mb-2">Select Package</label>
         <select
@@ -49,7 +104,7 @@ const PaymentForm = () => {
           <option value="">Select Package</option>
           <option value="1000">1000Br for 1 month</option>
           <option value="2500">2500Br for 3 months</option>
-          <option value="2500">5000Br for 6 months</option>
+          <option value="5000">5000Br for 6 months</option>
         </select>
       </div>
       <button

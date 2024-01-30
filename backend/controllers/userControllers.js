@@ -72,6 +72,7 @@ const getUser = async (req, res) => {
   res.send(user);
 };
 
+
 const changeVendorStatus = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -172,5 +173,5 @@ module.exports = {
   getuserByUsername,
   changePenddingVendor,
   getVendorApproved,
-  deleteUser,
+  deleteUser
 };

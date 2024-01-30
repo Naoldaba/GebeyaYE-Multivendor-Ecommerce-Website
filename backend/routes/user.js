@@ -11,7 +11,7 @@ const {
   getuserByUsername,
   changePenddingVendor,
   getVendorApproved,
-  deleteUser,
+  deleteUser
 } = require("../controllers/userControllers");
 
 router.post(
@@ -31,4 +31,5 @@ router.post("/vendor", upload.none(), getuserByUsername); // this end point crea
 // here i will create a delete and get request for all vendors
 router.get("/approvedVendor", admin, getVendorApproved);
 router.delete("/:id", admin, deleteUser);
+
 module.exports = router;

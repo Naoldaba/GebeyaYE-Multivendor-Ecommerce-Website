@@ -4,8 +4,6 @@ import { useState } from "react";
 import {useHistory} from 'react-router-dom';
 
 const SignUp = () => {
-
-
     const [selectedOption, setSelectedOption] = useState("Role");
     const [signUpData, setSignUpData] = useState({});
     const [licence, setLicence]= useState(null);

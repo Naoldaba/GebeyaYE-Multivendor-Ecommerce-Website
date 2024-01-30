@@ -94,9 +94,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
         }
       };
       
-      
-
-    const handleSubmit = async (event) => {
+      const handleSubmit = async (event) => {
           event.preventDefault();
       
           const products = cart.map((product) => ({
@@ -106,6 +104,8 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
             product_owner: product.owner
         }));
 
+        console.log(products);
+
         const amount = calculateTotalPrice();
         const orderData = {
             totalAmount: Number(amount),
@@ -114,30 +114,62 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
             location: checkoutData.deliveryLocation
         };
 
-        console.log(checkoutData); 
-    
-        try {
-        const response = await fetch('http://localhost:3000/api/order', {
-            method: 'POST',
-            headers: {
-                "authToken": authToken,
-                'Content-Type': 'application/json'
-            },
-            body:JSON.stringify(orderData),
-        });
-    
-        if (response.ok) {
-            const transaction = await response.json();
-            console.log("success");
-            history.push('/success order')
-        } else {
-            history.push('/failed order');
-            console.log('Error during transaction');
-        }
-        } catch (error) {
-        console.log("Couldn't make transaction due to", error);
-        }
-        }
+        console.log(checkoutData.senderAccount); 
+        
+        fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
+          method: "POST",
+          headers:{
+            "Content-Type": "application/json"
+          },
+          body:JSON.stringify({accountNumber: checkoutData.senderAccount})
+        })
+        .then((response)=>{
+          if (response.ok){
+            const verifyCode= prompt('We sent Verification code to your email. Please Enter the verification code')
+            fetch('http://127.0.0.1:3000/api/payment/purchase', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({accountNumber:checkoutData.senderAccount, amount:amount, verificationCode:verifyCode})
+            })
+            .then((response)=>{
+              if (response.ok){
+                alert("Payment Successfull");
+                fetch('http://localhost:3000/api/order', {
+                  method: 'POST',
+                  headers: {
+                      "authToken": authToken,
+                      'Content-Type': 'application/json'
+                  },
+                  body:JSON.stringify(orderData),
+                })
+                .then((response)=>{
+                  if (response.ok){
+                    history.push('/success order')
+                  } else{
+                    history.push('/failed order');
+                  }
+                    
+                })
+                .catch(error=>alert(error));
+              } else{
+                return response.text().then(text => {
+                  throw new Error(text);
+                });
+              }
+            })
+            .catch (error=>alert(error.message))
+          } else{
+            return response.text().then(text=>{
+              throw new Error(text);
+            })
+          }
+        })
+        .catch((error)=>{
+          alert(error.message);
+        })
+      }
 
     const toggleAccordion=(productId)=>{
         if (selectedProduct===productId){
