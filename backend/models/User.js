@@ -39,11 +39,9 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Buyer", "Vendor", "Admin", "vendorPendding"], // customer=> buyer vendor=>Vendor
+    enum: ["Buyer", "Vendor", "Admin", "vendorPendding"],
     required: true,
   },
-
-  // customer Spesific field
 
   cart: [
     {
@@ -81,8 +79,6 @@ const UserSchema = new mongoose.Schema({
       },
     },
   ],
-
- 
 
   licence: {
     type: String,
