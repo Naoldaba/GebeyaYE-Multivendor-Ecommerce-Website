@@ -48,7 +48,7 @@ test('addToCart should be called when "Add to Cart" button is clicked', () => {
     </AuthProvider>
   );
 
-  const addToCartButtons = getAllByText('Add to Cart');
+  const addToCartButtons = screen.getAllByText('Add to Cart');
 
   fireEvent.click(addToCartButtons[0]);
 
