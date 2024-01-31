@@ -1,11 +1,11 @@
 const Advertisement = require("../models/Advertisement");
-const {User} = require('../models/User');
+const { User } = require("../models/User");
 
 const createAdvert = async (req, res) => {
   try {
     console.log(req.body);
 
-    const userId= req.user._id;
+    const userId = req.user._id;
     const user = await User.findById(userId);
 
     let newAdvert = new Advertisement({
@@ -16,7 +16,7 @@ const createAdvert = async (req, res) => {
     });
 
     if (req.file) {
-      const serverBaseURL = 'http://localhost:3000';
+      const serverBaseURL = "http://localhost:3000";
       newAdvert.banner = `${serverBaseURL}/public/images/${req.file.filename}`;
     }
     const savedAdvert = await newAdvert.save();
@@ -28,23 +28,23 @@ const createAdvert = async (req, res) => {
   }
 };
 
-const allAdverts= async (req, res)=>{
-  try{
+const allAdverts = async (req, res) => {
+  try {
     const approvedAdvertisements = await Advertisement.find({
       status: "Approved",
-    }).exec();
+    });
     return res.status(200).send(approvedAdvertisements);
-  } catch{
+  } catch {
     console.error("Error retrieving advertisements:", error);
     throw error;
   }
-}
+};
 
 const getAdvert = async (req, res) => {
   try {
     const pendingAdvertisements = await Advertisement.find({
       status: "Pending",
-    }).exec();
+    });
     return res.status(200).send(pendingAdvertisements);
   } catch (error) {
     console.error("Error retrieving advertisements:", error);
@@ -63,7 +63,7 @@ const changeAdvertStatus = async (req, res) => {
     advert.status = "Approved";
 
     advert = await advert.save();
-    
+
     return res.send(advert);
   } catch (error) {
     console.error("Error retrieving advertisements:", error);
@@ -71,19 +71,25 @@ const changeAdvertStatus = async (req, res) => {
   }
 };
 
-const deleteAdvert = async (req, res)=>{
-  try{
-    const advertId=req.params.id;
-    const deletedAdvert= await Advertisement.findByIdAndDelete(advertId);
-    
-    if (!deletedAdvert){
-      return res.status(400).send('Product not found');
+const deleteAdvert = async (req, res) => {
+  try {
+    const advertId = req.params.id;
+    const deletedAdvert = await Advertisement.findByIdAndDelete(advertId);
+
+    if (!deletedAdvert) {
+      return res.status(400).send("Product not found");
     }
-    return res.status(200).send('product succussfully deleted');
+    return res.status(200).send("product succussfully deleted");
   } catch {
-    console.log('Unable to delete product');
+    console.log("Unable to delete product");
     return res.status(500).send("Internal server error");
   }
-}
+};
 
-module.exports = { createAdvert, getAdvert, changeAdvertStatus, deleteAdvert, allAdverts };
+module.exports = {
+  createAdvert,
+  getAdvert,
+  changeAdvertStatus,
+  deleteAdvert,
+  allAdverts,
+};

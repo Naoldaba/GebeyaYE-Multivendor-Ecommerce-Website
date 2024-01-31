@@ -91,7 +91,7 @@ const changeVendorStatus = async (req, res) => {
 
 const getVendorPending = async (req, res) => {
   try {
-    const pendingVendor = await User.find({ status: "pendding" }).exec();
+    const pendingVendor = await User.find({ status: "pendding" });
     return res.status(200).send(pendingVendor);
   } catch (error) {
     console.error("Error retrieving Users:", error);
@@ -101,7 +101,7 @@ const getVendorPending = async (req, res) => {
 
 const getVendorApproved = async (req, res) => {
   try {
-    const approvedVendor = await User.find({ status: "approved" }).exec();
+    const approvedVendor = await User.find({ status: "approved" });
     return res.status(200).send(approvedVendor);
   } catch (error) {
     console.error("Error retrieving Users:", error);
@@ -113,7 +113,7 @@ const getuserByUsername = async (req, res) => {
   try {
     const userName = req.body.name;
     console.log(userName);
-    const pendingVendor = await User.find({ username: userName }).exec();
+    const pendingVendor = await User.find({ username: userName });
     if (!pendingVendor) {
       return res
         .status(404)
@@ -134,7 +134,7 @@ const changePenddingVendor = async (req, res) => {
       vendorId,
       { role: "Vendor", status: "approved" },
       { new: true }
-    ).exec();
+    );
 
     return res.status(200).send(approvedVendor);
   } catch (error) {

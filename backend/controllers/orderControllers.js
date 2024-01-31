@@ -6,7 +6,7 @@ const Cart = require("../models/Cart");
 const getOrder = async (req, res) => {
   try {
     const order = await Order.find();
-    res.send(order);
+    res.status(200).send(order);
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).send("Internal Server Error");
