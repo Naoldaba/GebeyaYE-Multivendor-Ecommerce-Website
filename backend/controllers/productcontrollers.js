@@ -1,9 +1,7 @@
-const { Product, validateProduct } = require("../models/Product"); // Adjust the path based on your project structure
-const {User} = require("../models/User");
+const { Product, validateProduct } = require("../models/Product");
+const { User } = require("../models/User");
 const getAllProduct = async (req, res) => {
   try {
-    // Use async/await to fetch all products from the database
-
     const products = await Product.find();
     res.send(products);
   } catch (error) {
@@ -20,7 +18,6 @@ const search = async (req, res) => {
       query.category = category;
     }
 
-    
     if (productName) {
       query.name = new RegExp(`.*${productName}.*`, "i");
     }
@@ -37,7 +34,6 @@ const getProduct = async (req, res) => {
   try {
     const productId = req.params.id;
 
-    // Use async/await to fetch the product from the database
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -65,18 +61,15 @@ const getOwndProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    // Validate the product data using the model's validation function
     const validationResult = validateProduct(req.body);
 
     if (validationResult.error) {
       return res.status(400).send(validationResult.error.details[0].message);
     }
 
-    // Destructure validated data
     const { name, price, description, stock, category } =
       validationResult.value;
 
-    // Use async/await to create a new product in the database
     const newProduct = new Product({
       name,
       price,
@@ -87,9 +80,9 @@ const createProduct = async (req, res) => {
     newProduct.owner = req.user._id;
 
     if (req.file) {
-      const serverBaseURL = 'http://localhost:3000';
+      const serverBaseURL = "http://localhost:3000";
 
-      newProduct.imageurl = `${serverBaseURL}/public/images/${req.file.filename}`
+      newProduct.imageurl = `${serverBaseURL}/public/images/${req.file.filename}`;
       console.log(newProduct);
     }
 
@@ -105,22 +98,20 @@ const createProduct = async (req, res) => {
 const modifyProduct = async (req, res) => {
   try {
     const productId = req.params.id;
-    // Validate the product data using the model's validation function
+
     const validationResult = validateProduct(req.body);
 
     if (validationResult.error) {
       return res.status(400).send(validationResult.error.details[0].message);
     }
 
-    // Destructure validated data
     const { name, price, description, stock, category } =
       validationResult.value;
 
-    // Use async/await to update the product in the database
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       { name, price, description, stock, category },
-      { new: true } // Returns the updated product
+      { new: true }
     );
 
     if (!updatedProduct) {
@@ -134,14 +125,10 @@ const modifyProduct = async (req, res) => {
   }
 };
 
-
-
-
 const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
 
-    // Use async/await to delete the product from the database
     const deletedProduct = await Product.findByIdAndDelete(productId);
 
     if (!deletedProduct) {
