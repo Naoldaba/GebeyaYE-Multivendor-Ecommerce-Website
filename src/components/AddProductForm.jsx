@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { useHistory } from 'react-router-dom';
 
+
 const AddProductForm = () => {
   const [productName, setProductName] = useState('');
   const [photo, setPhoto] = useState(null);
