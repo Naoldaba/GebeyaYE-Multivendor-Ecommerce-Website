@@ -42,7 +42,8 @@ const addOrder = async (req, res) => {
       products: req.body.productDetail, 
       totalAmount: req.body.totalAmount,
       deliveryDate: req.body.date,
-      deliveryLocation: req.body.location
+      deliveryLocation: req.body.location,
+      serviceFee: req.body.serviceFee
     });
 
     const savedOrder = await order.save();
