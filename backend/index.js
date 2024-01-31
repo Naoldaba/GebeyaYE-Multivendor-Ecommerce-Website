@@ -13,7 +13,8 @@ const message = require("./routes/message");
 const payment = require("./routes/payment");
 
 // const mongoURL ="mongodb+srv://eyobderese:jobman2008@cluster0.32apy9n.mongodb.net/?retryWrites=true&w=majority";
-const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
+// const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
+const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye_test"; // this is for test env
 mongoose
   .connect(mongoURL)
   .then(() => {
@@ -36,6 +37,8 @@ app.use("/api/message", message);
 app.use("/api/payment", payment);
 
 const PORT = 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`The server is Runnig on port number ${PORT}`);
 });
+
+module.exports = server;
