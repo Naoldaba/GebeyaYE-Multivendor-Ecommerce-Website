@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 function auth(req, res, next) {
-  const token = req.header("authToken"); // x => authtoken
+  const token = req.header("authToken");
   if (!token) {
     return res.status(401).send("You dont have Access");
   }
