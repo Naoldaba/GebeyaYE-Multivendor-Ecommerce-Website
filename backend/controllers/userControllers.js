@@ -39,7 +39,7 @@ const userRegister = async (req, res) => {
       isPaid,
       isPremium,
       address,
-      status, 
+      status,
     });
 
     if (role == "Vendor") {
@@ -71,7 +71,6 @@ const getUser = async (req, res) => {
   const user = await User.find({ _id: userId });
   res.send(user);
 };
-
 
 const changeVendorStatus = async (req, res) => {
   try {
@@ -111,7 +110,6 @@ const getVendorApproved = async (req, res) => {
 };
 
 const getuserByUsername = async (req, res) => {
-  // this is for shawing vendor status
   try {
     const userName = req.body.name;
     console.log(userName);
@@ -149,7 +147,6 @@ const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Use Mongoose to find and delete the user by ID
     const deleted_User = await User.findByIdAndDelete(userId);
 
     if (deleted_User) {
@@ -173,5 +170,5 @@ module.exports = {
   getuserByUsername,
   changePenddingVendor,
   getVendorApproved,
-  deleteUser
+  deleteUser,
 };
