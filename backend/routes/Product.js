@@ -12,7 +12,6 @@ const {
 } = require("../controllers/productcontrollers");
 const auth = require("../middleware/auth");
 
-// Route to get all products
 router.get("/", getAllProduct);
 
 //Route to search product by category and name
@@ -20,16 +19,12 @@ router.get("/search", search);
 
 router.get("/myproduct", auth, getOwndProduct);
 
-// Route to get a product by ID
 router.get("/:id", getProduct);
 
-// Route to create a new product
-router.post("/", auth, upload.single("productImage"), createProduct); // before upploading I need to find the user._id from the req.body
+router.post("/", auth, upload.single("productImage"), createProduct);
 
-// Route to update a product by ID
 router.put("/:id", auth, upload.single("productImage"), modifyProduct);
 
-// Route to delete a product by ID
 router.delete("/:id", deleteProduct);
 
 module.exports = router;
