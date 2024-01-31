@@ -30,15 +30,16 @@ const PaymentForm = () => {
         if (response.ok) {
           setShowDialog(true);
         } else {
-          alert("Something went wrong, please try again.");
+          response.text().then(text=>{
+            throw new Error(text);
+          })
         }
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.message);
       })
   };
 
-  // Handle payment after verification code is set
   useEffect(() => {
     if (verificationCode) {
       fetch('http://127.0.0.1:3000/api/payment/pay', {

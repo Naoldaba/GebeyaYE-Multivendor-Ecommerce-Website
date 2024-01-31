@@ -106,6 +106,7 @@ const performPremiumPayment= async(req, res) => {
       res.status(200).send("Payment successful. Amount deducted from the account.");
     } else {
       res.status(401).send("Invalid verification code.");
+      await UserVerification.deleteOne({ email });
     }
   } catch (error) {
     console.error("Error verifying verification code:", error);
