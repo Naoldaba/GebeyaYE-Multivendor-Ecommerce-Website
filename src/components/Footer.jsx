@@ -22,11 +22,11 @@ function Footer(){
             </div>
             <div className="w-1/4 text-center flex flex-wrap justify-center">
                 <p className="w-full mb-2 italic text-xl font-light">follow us on</p>
-                <FaFacebook className="social-icons" color="#672301DE" fontSize="20px"/>
-                <FaInstagram className="social-icons" color="#672301DE" fontSize="20px"/>
-                <FaTelegram className="social-icons" color="#672301DE" fontSize="20px"/>
-                <FaYoutube className="social-icons" color="#672301DE" fontSize="20px"/>
-                <BiLogoGmail className="social-icons" color="#672301DE" fontSize="20px"/>
+                <FaFacebook data-testid='facebook-icon' className="social-icons" color="#672301DE" fontSize="20px"/>
+                <FaInstagram data-testid='instagram-icon' className="social-icons" color="#672301DE" fontSize="20px"/>
+                <FaTelegram data-testid='telegram-icon' className="social-icons" color="#672301DE" fontSize="20px"/>
+                <FaYoutube data-testid='youtube-icon' className="social-icons" color="#672301DE" fontSize="20px"/>
+                <BiLogoGmail data-testid='gmail-icon' className="social-icons" color="#672301DE" fontSize="20px"/>
             </div>
         </div>
     )

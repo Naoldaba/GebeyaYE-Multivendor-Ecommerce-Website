@@ -39,7 +39,7 @@ const userRegister = async (req, res) => {
       isPaid,
       isPremium,
       address,
-      status, 
+      status,
     });
 
     if (role == "Vendor") {
@@ -72,7 +72,6 @@ const getUser = async (req, res) => {
   res.send(user);
 };
 
-
 const changeVendorStatus = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -92,7 +91,7 @@ const changeVendorStatus = async (req, res) => {
 
 const getVendorPending = async (req, res) => {
   try {
-    const pendingVendor = await User.find({ status: "pendding" }).exec();
+    const pendingVendor = await User.find({ status: "pendding" });
     return res.status(200).send(pendingVendor);
   } catch (error) {
     console.error("Error retrieving Users:", error);
@@ -102,7 +101,7 @@ const getVendorPending = async (req, res) => {
 
 const getVendorApproved = async (req, res) => {
   try {
-    const approvedVendor = await User.find({ status: "approved" }).exec();
+    const approvedVendor = await User.find({ status: "approved" });
     return res.status(200).send(approvedVendor);
   } catch (error) {
     console.error("Error retrieving Users:", error);
@@ -111,11 +110,10 @@ const getVendorApproved = async (req, res) => {
 };
 
 const getuserByUsername = async (req, res) => {
-  // this is for shawing vendor status
   try {
     const userName = req.body.name;
     console.log(userName);
-    const pendingVendor = await User.find({ username: userName }).exec();
+    const pendingVendor = await User.find({ username: userName });
     if (!pendingVendor) {
       return res
         .status(404)
@@ -136,7 +134,7 @@ const changePenddingVendor = async (req, res) => {
       vendorId,
       { role: "Vendor", status: "approved" },
       { new: true }
-    ).exec();
+    );
 
     return res.status(200).send(approvedVendor);
   } catch (error) {
@@ -149,7 +147,6 @@ const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Use Mongoose to find and delete the user by ID
     const deleted_User = await User.findByIdAndDelete(userId);
 
     if (deleted_User) {
@@ -173,5 +170,5 @@ module.exports = {
   getuserByUsername,
   changePenddingVendor,
   getVendorApproved,
-  deleteUser
+  deleteUser,
 };

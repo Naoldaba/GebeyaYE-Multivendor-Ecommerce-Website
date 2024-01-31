@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const advertisementSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Assuming you have a User model
+    ref: "User",
     required: true,
   },
   description: {
@@ -12,7 +12,7 @@ const advertisementSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 255,
   },
-  userName:{
+  userName: {
     type: String,
   },
   status: {

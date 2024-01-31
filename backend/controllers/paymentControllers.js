@@ -1,11 +1,9 @@
 const BankAccount = require("../models/BankAccount");
-const nodemailer = require('nodemailer');
-const UserVerification = require('../models/UserVerification');
+const nodemailer = require("nodemailer");
+const UserVerification = require("../models/UserVerification");
 const { User } = require("../models/User");
-require('dotenv').config();
+require("dotenv").config();
 
-
-//sendVerficationEmail
 async function sendVerificationEmail(email, verificationCode) {
   try {
     const transporter = nodemailer.createTransport({
@@ -15,39 +13,39 @@ async function sendVerificationEmail(email, verificationCode) {
       secure: false,
       auth: {
         user: process.env.EMAIL,
-        pass: process.env.PASSWORD
+        pass: process.env.PASSWORD,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: 'Verification Code for Your Payment',
+      subject: "Verification Code for Your Payment",
       text: `Your verification code is: ${verificationCode}`,
     };
 
     await transporter.sendMail(mailOptions);
-    console.log('mail successfully sent')
+    console.log("mail successfully sent");
   } catch (error) {
     console.error("Error sending verification email:", error);
     throw error;
   }
 }
 
-const verifyAccount = async (req, res)=> {
+const verifyAccount = async (req, res) => {
   try {
     const { accountNumber } = req.body;
 
-    const user = await BankAccount.findOne({accountNumber:accountNumber})
+    const user = await BankAccount.findOne({ accountNumber: accountNumber });
 
-    if (!user){
-      return res.status(404).send("Account Not Found")
+    if (!user) {
+      return res.status(404).send("Account Not Found");
     }
 
-    const email=user.email;
-    console.log(user)
+    const email = user.email;
+    console.log(user);
 
     const verificationCode = generateVerificationCode();
 
@@ -60,20 +58,18 @@ const verifyAccount = async (req, res)=> {
     console.error("Error performing premium payment:", error);
     res.status(500).send("Internal Server Error");
   }
-}
+};
 
 function generateVerificationCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-
-//Verify verification code
-const performPremiumPayment= async(req, res) => {
+const performPremiumPayment = async (req, res) => {
   try {
     const { verificationCode, balance, accountNumber, username } = req.body;
 
-    const user= await BankAccount.findOne({accountNumber});
-    const email=user.email;
+    const user = await BankAccount.findOne({ accountNumber });
+    const email = user.email;
 
     const userVerification = await UserVerification.findOne({ email });
 
@@ -82,7 +78,6 @@ const performPremiumPayment= async(req, res) => {
     }
 
     if (userVerification.verificationCode === verificationCode) {
-     
       const bankAccount = await BankAccount.findOne({ email });
 
       if (!bankAccount) {
@@ -95,15 +90,17 @@ const performPremiumPayment= async(req, res) => {
 
       bankAccount.balance -= balance;
       await bankAccount.save();
-      
-      const Vendor= await User.findOne({username:username});
-      Vendor.payment="approved";
-      await Vendor.save()
 
-      console.log('approved');
+      const Vendor = await User.findOne({ username: username });
+      Vendor.payment = "approved";
+      await Vendor.save();
+
+      console.log("approved");
       await UserVerification.deleteOne({ email });
 
-      res.status(200).send("Payment successful. Amount deducted from the account.");
+      res
+        .status(200)
+        .send("Payment successful. Amount deducted from the account.");
     } else {
       res.status(401).send("Invalid verification code.");
       await UserVerification.deleteOne({ email });
@@ -112,46 +109,48 @@ const performPremiumPayment= async(req, res) => {
     console.error("Error verifying verification code:", error);
     res.status(500).send("Internal Server Error");
   }
-}
+};
 
+const performProductPayment = async (req, res) => {
+  try {
+    const { accountNumber, verificationCode, amount } = req.body;
+    const user = await BankAccount.findOne({ accountNumber });
+    const email = user.email;
 
-const performProductPayment= async (req, res)=>{
-  try{
-      const {accountNumber, verificationCode, amount}= req.body;
-      const user= await BankAccount.findOne({accountNumber});
-      const email=user.email;
+    const userVerification = await UserVerification.findOne({ email });
 
-      const userVerification = await UserVerification.findOne({ email });
-    
-      if (!userVerification) {
-        return res.status(404).send("Verification code record not found.");
+    if (!userVerification) {
+      return res.status(404).send("Verification code record not found.");
+    }
+
+    if (userVerification.verificationCode === verificationCode) {
+      const bankAccount = await BankAccount.findOne({ email });
+
+      if (!bankAccount) {
+        return res.status(404).send("Bank account not found.");
       }
 
-      if (userVerification.verificationCode === verificationCode){
-        const bankAccount = await BankAccount.findOne({ email });
+      if (bankAccount.balance < amount) {
+        return res.status(400).send("Insufficient fund for making a purchase.");
+      }
 
-        if (!bankAccount) {
-          return res.status(404).send("Bank account not found.");
-        }
-  
-        if (bankAccount.balance < amount) {
-          return res.status(400).send("Insufficient fund for making a purchase.");
-        }
-  
-        bankAccount.balance -= amount;
-        await bankAccount.save();
-  
-        console.log('approved');
-        await UserVerification.deleteOne({ email });
-  
-        res.status(200).send("Payment successful. Amount deducted from the account.");
-      } else {
+      bankAccount.balance -= amount;
+      await bankAccount.save();
+
+      console.log("approved");
+      await UserVerification.deleteOne({ email });
+
+      res
+        .status(200)
+        .send("Payment successful. Amount deducted from the account.");
+    } else {
       res.status(401).send("Invalid verification code.");
-      }
+    }
+  } catch (error) {}
+};
 
-  } catch(error){
-
-  }
-}
-
-module.exports = { performPremiumPayment, verifyAccount, performProductPayment };
+module.exports = {
+  performPremiumPayment,
+  verifyAccount,
+  performProductPayment,
+};

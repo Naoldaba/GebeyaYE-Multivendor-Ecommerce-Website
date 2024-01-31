@@ -3,19 +3,17 @@ const mongoose = require("mongoose");
 const messageSchema = new mongoose.Schema({
   sender: {
     type: String,
-    // ref: "User", // Assuming you have a User model
-    // required: true,
   },
   receiver: {
     type: String,
-    // ref: "User", // Assuming you have a User model
+
     required: true,
   },
   reply: {
     type: String,
     default: "",
   },
-  sender_id:{
+  sender_id: {
     type: mongoose.Schema.Types.ObjectId,
   },
   content: {
