@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
-const joiPassword = joi.extend(joiPasswordExtendCore);
+const { joiPasswordExtendCore } = require("joi-password");
+const joiPassword = Joi.extend(joiPasswordExtendCore);
 const jwt = require("jsonwebtoken");
 
 const UserSchema = new mongoose.Schema({
@@ -31,7 +32,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   accountNumber: {
-    type: String,
+    type: Number,
 
     unique: true,
   },
@@ -128,7 +129,7 @@ function UserValidater(product) {
       .noWhiteSpaces()
       .onlyLatinCharacters()
       .required(),
-    accountNumber: Joi.string().required(),
+    accountNumber: Joi.number().required(),
     role: Joi.string().required(),
     isPremium: Joi.boolean(),
     address: Joi.string(),

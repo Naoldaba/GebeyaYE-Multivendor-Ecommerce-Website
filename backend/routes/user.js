@@ -32,6 +32,6 @@ router.post("/vendor", upload.none(), getuserByUsername);
 
 router.get("/approvedVendor", admin, getVendorApproved);
 router.delete("/:id", admin, deleteUser);
-router.delete("/", auth, deleteMySelf);
+router.delete("/profile", auth, deleteMySelf);
 
 module.exports = router;
