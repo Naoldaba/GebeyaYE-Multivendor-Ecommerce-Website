@@ -22,7 +22,7 @@ const ProductCatalog = ({ products, addToCart, cart }) => {
     const handleAddToCart = (item) => {
         if (isAuthenticated && type === 'Buyer') {
             addToCart(item);
-        } else if (type === 'Buyer') {
+        } else if (type !== 'Vendor' || type!== "Admin") {
             alert('Please login first');
             history.push('/login');
             console.log('Please log in first');
