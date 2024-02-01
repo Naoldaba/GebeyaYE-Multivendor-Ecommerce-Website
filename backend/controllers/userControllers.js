@@ -196,6 +196,22 @@ const changeMyStuates = async (req, res) => {
   }
 };
 
+const changeMyStuatesDown = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const premiumVendor = await User.findByIdAndUpdate(
+      userId,
+      { isPremium: false, payment: "free" },
+      { new: true }
+    );
+
+    res.status(200).send(premiumVendor);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   userRegister,
   getUser,
@@ -207,4 +223,5 @@ module.exports = {
   deleteUser,
   deleteMySelf,
   changeMyStuates,
+  changeMyStuatesDown,
 };
