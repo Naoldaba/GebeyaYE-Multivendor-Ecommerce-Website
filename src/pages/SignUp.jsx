@@ -34,7 +34,6 @@ const SignUp = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
     
-        try {
           let formData = new FormData();
     
           Object.entries(signUpData).forEach(([key, value]) => {
@@ -46,33 +45,33 @@ const SignUp = () => {
             formData.append("profilePicture", profilePicture);  
           }
     
-          const response = await fetch("http://127.0.0.1:3000/api/user", {
+          fetch("http://127.0.0.1:3000/api/user", {
             method: "POST",
             body: formData,
-          });
-    
-          if (!response.ok) {
-            return response.text().then((text)=>{
-              throw new Error(text);
-            })
-            
-          } else{
-            const data = await response.json()
-            console.log(data); 
-            if (selectedOption=="Buyer"){
-              alert(`Dear ${data.name} you are successfully signed up. You can login and continue`);
-              history.push('/login')
+          })
+          .then((response)=>{
+            if (!response.ok) {
+              return response.text().then((text)=>{
+                throw new Error(text);
+              })
+              
+              
             } else{
-              alert(`Dear ${data.name} your application is successfully sent.`);
-              history.push('/application status');
+                return response.json().then((data)=>{
+                  console.log(data);
+                  if (selectedOption == "Buyer") {
+                    alert(`Dear ${data.name} you are successfully signed up. You can login and continue`);
+                    history.push('/login');
+                  } else {
+                    alert(`Dear ${data.name} your application is successfully sent.`);
+                    history.push('/application status');
+                  }
+                })
             }
-          }
-    
-        } catch (error) {
+          })
+         .catch ((error)=>{
           alert(error.message)
-          console.error('Opps there is something wrong when signing you up:', error.message);
-          
-        }
+        }) 
       };
 
     return (

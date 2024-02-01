@@ -5,7 +5,6 @@ import ecom from "../utils/ecom.jpg";
 import { AuthContext } from "../components/AuthContext";
 import { useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import Auth from "../utils/Auth.jpg";
 import {useHistory} from "react-router-dom";
 
 
