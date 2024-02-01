@@ -180,6 +180,22 @@ const deleteMySelf = async (req, res) => {
   }
 };
 
+const changeMyStuates = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const premiumVendor = await User.findByIdAndUpdate(
+      userId,
+      { isPremium: true, payment: "pendding" },
+      { new: true }
+    );
+
+    res.status(200).send(premiumVendor);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   userRegister,
   getUser,
@@ -190,4 +206,5 @@ module.exports = {
   getVendorApproved,
   deleteUser,
   deleteMySelf,
+  changeMyStuates,
 };

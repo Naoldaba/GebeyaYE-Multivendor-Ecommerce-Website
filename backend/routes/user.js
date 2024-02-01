@@ -13,6 +13,7 @@ const {
   getVendorApproved,
   deleteUser,
   deleteMySelf,
+  changeMyStuates,
 } = require("../controllers/userControllers");
 
 router.post(
@@ -33,5 +34,6 @@ router.post("/vendor", upload.none(), getuserByUsername);
 router.get("/approvedVendor", admin, getVendorApproved);
 router.delete("/:id", admin, deleteUser);
 router.delete("/profile", auth, deleteMySelf);
+router.patch("/upgrade", auth, changeMyStuates);
 
 module.exports = router;
