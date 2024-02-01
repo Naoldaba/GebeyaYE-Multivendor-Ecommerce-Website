@@ -1,14 +1,45 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import {useHistory} from "react-router-dom";
+import { AuthContext } from "../components/AuthContext";
 
 const VendorProfile = ({ vendorProfile }) => {
+  const history = useHistory();
+  const {authToken} = useContext(AuthContext);
+
 
   if (!vendorProfile) {
     return <div>Couldn't fetch</div>;
   }
   console.log(vendorProfile);
   
-
+  function handleUpgrade() {
+    const confirmation = window.confirm('Are you sure you want to upgrade your account to premium?');
+    
+    if (confirmation) {
+        fetch('http://localhost:3000/api/user/upgrade', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "authToken": authToken 
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to upgrade account. Please try again later.');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            history.push('/login'); 
+        })
+        .catch((error) => {
+            
+            console.error('Upgrade error:', error.message);
+            alert('Something went wrong during the upgrade process. Please try again later.');
+        });
+    }
+}
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gradient-to-b from-indigo-500 to-indigo-700 shadow-md rounded px-8 py-6 mb-4  max-w-xl">
@@ -42,8 +73,13 @@ const VendorProfile = ({ vendorProfile }) => {
               <p className="text-gray-300 font-semibold">Account Number:</p>
               <p className="text-gray-200">{profile.accountNumber}</p>
             </div>
+            
           </div>
+          
         ))}
+        <div className='text-yellow-400 mt-6'>
+          <a onClick={handleUpgrade} className='hover:cursor-pointer'>Upgrade Account to Premium</a>
+        </div>
       </div>
     </div>
   );
