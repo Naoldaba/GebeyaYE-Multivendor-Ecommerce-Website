@@ -12,6 +12,7 @@ const {
   changePenddingVendor,
   getVendorApproved,
   deleteUser,
+  deleteMySelf,
 } = require("../controllers/userControllers");
 
 router.post(
@@ -31,5 +32,6 @@ router.post("/vendor", upload.none(), getuserByUsername);
 
 router.get("/approvedVendor", admin, getVendorApproved);
 router.delete("/:id", admin, deleteUser);
+router.delete("/", auth, deleteMySelf);
 
 module.exports = router;

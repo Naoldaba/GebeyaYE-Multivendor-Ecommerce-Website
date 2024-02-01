@@ -161,6 +161,24 @@ const deleteUser = async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 };
+const deleteMySelf = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const deleted_User = await User.findByIdAndDelete(userId);
+
+    if (deleted_User) {
+      res
+        .status(200)
+        .send({ message: "User deleted successfully", deleted_User });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   userRegister,
@@ -171,4 +189,5 @@ module.exports = {
   changePenddingVendor,
   getVendorApproved,
   deleteUser,
+  deleteMySelf,
 };
