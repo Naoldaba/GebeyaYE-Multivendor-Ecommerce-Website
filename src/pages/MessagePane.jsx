@@ -63,7 +63,7 @@ const MessagePage = ({ userType, userId }) => {
 
     return (
         <div className="flex justify-center items-center h-screen gap-32">
-            <div>
+            <div className='hidden lg:block'>
                 <h2 className='text-6xl mb-14'>Contact US</h2>
                 <div className='text-xl'>
                     <p>Our address is: King George VI St</p>
