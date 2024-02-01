@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import shoe from '../utils/shoe.avif';
-import bag from '../utils/bag.avif';
-import toy from '../utils/toy.jpg';
-import logo_white from '../utils/logo_white.png';
+import Eyob from '../utils/Eyob.JPG';
+import Aregawi from '../utils/Aregawi.jpg';
 import logo_red from '../utils/logo_red.png';
+import Moti from '../utils/Moti.jpg';
 
 const AboutUs = () => {
     return (
@@ -19,13 +18,26 @@ desired items and explore new products creating a virtual front between store
 owners and online shoppers.</p>
                 </div>
             </div>
-            <div className="flex flex-wrap w-full justify-center ">
-                <h3 className="w-full text-center text-2xl font-bold my-10">Admins</h3>
-                <img src={bag} className="w-1/3 h-64 max-w-max " />
-                <img src={toy} className="w-1/3 h-64 max-w-max " />
-                <img src={shoe} className="w-1/3 h-64 max-w-max " />
+            <div className="flex flex-wrap w-full justify-center">
+                <h3 className="w-full text-center text-2xl font-bold my-10">Our Admins</h3>
+                <div className="flex flex-wrap w-full justify-center gap-40">
+                    <fieldset>
+                        <img src={Eyob} className="h-64 max-w-max " />
+                        <caption className="w-40 text-left">Eyob Deresse</caption>
+                    </fieldset>
+                    <fieldset>
+                        <img src={Aregawi} className="h-64 max-w-max rounded-2xl" />
+                        <caption className="w-40 text-left">Aregawi Fikre</caption>
+                    </fieldset>
+                    <fieldset>
+                        <img src={Moti} className="h-64 max-w-max rounded-2xl" />
+                        <caption className="w-40 text-left">Moti Leggese</caption>
+                    </fieldset>
+                    
+                </div>
+                
             </div>
-            <Link className=" text-blue-500 font-semibold text-xl p-1 w-20 my-10" to="/about/contact">Contact</Link>
+            <Link className=" text-blue-500 font-semibold text-xl p-1 w-40 my-10" to="/about/contact">Contact Admins</Link>
         </div>
     );
 }

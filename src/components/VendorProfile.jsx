@@ -5,7 +5,7 @@ import { AuthContext } from "../components/AuthContext";
 
 const VendorProfile = ({ vendorProfile }) => {
   const history = useHistory();
-  const {authToken} = useContext(AuthContext);
+  const {authToken, logout} = useContext(AuthContext);
 
 
   if (!vendorProfile) {
@@ -31,6 +31,7 @@ const VendorProfile = ({ vendorProfile }) => {
             return response.json();
         })
         .then((data) => {
+            logout();
             history.push('/login'); 
         })
         .catch((error) => {
@@ -39,7 +40,37 @@ const VendorProfile = ({ vendorProfile }) => {
             alert('Something went wrong during the upgrade process. Please try again later.');
         });
     }
-}
+  }
+
+  function handleDowngrade() {
+    const confirmation = window.confirm('Are you sure you want to downgrade your account to Regular?');
+    
+    if (confirmation) {
+        fetch('http://localhost:3000/api/user/downgrade', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "authToken": authToken 
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to upgrade account. Please try again later.');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            logout();
+            history.push('/login'); 
+        })
+        .catch((error) => {
+            
+            console.error('Upgrade error:', error.message);
+            alert('Something went wrong during the upgrade process. Please try again later.');
+        });
+    }
+  }
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gradient-to-b from-indigo-500 to-indigo-700 shadow-md rounded px-8 py-6 mb-4  max-w-xl">
@@ -77,9 +108,16 @@ const VendorProfile = ({ vendorProfile }) => {
           </div>
           
         ))}
-        <div className='text-yellow-400 mt-6'>
-          <a onClick={handleUpgrade} className='hover:cursor-pointer'>Upgrade Account to Premium</a>
-        </div>
+        {!vendorProfile[0].isPremium ? (
+            <div className='text-yellow-400 mt-6'>
+              <a onClick={handleUpgrade} className='hover:cursor-pointer'>Upgrade Account to Premium</a>
+            </div>
+        ) : (
+            <div className='text-yellow-400 mt-6'>
+              <a onClick={handleDowngrade} className='hover:cursor-pointer'>Downgrade Account to Regular</a>
+            </div>
+        )}
+        
       </div>
     </div>
   );
