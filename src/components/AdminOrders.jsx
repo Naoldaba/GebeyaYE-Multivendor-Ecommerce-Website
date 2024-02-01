@@ -39,7 +39,8 @@ const AdminOrders = () => {
               <th className="px-4 py-2">Order ID</th>
               <th className="px-4 py-2">Customer</th>
               <th className="px-4 py-2">Delivery Date</th>
-              <th className="px-4 py-2">Status</th>
+              <th className="px-4 py-2">Sale</th>
+              <th className="px-4 py-2">Deducted Commission</th>
               
             </tr>
           </thead>
@@ -49,7 +50,8 @@ const AdminOrders = () => {
                 <td className="px-4 py-2">{order._id}</td>
                 <td className="px-4 py-2">{order.userName}</td>
                 <td className="px-4 py-2">{order.deliveryDate}</td>
-                <td className="px-4 py-2">{order.status}</td>
+                <td className="px-4 py-2">{order.totalAmount} Br.</td>
+                <td className="px-4 py-2">{order.serviceFee} Br.</td>
               </tr>
             ))}
           </tbody>

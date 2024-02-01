@@ -18,6 +18,7 @@ const orderSchema = new mongoose.Schema({
   totalAmount: { type: Number, required: true },
   deliveryDate: { type: String, required: true }, 
   deliveryLocation: {type: String, requied: true },
+  serviceFee:{type: Number, required: true}
 });
 
 const Order = mongoose.model("Order", orderSchema);

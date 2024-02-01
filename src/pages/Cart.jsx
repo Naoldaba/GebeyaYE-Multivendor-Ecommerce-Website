@@ -138,11 +138,13 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
           }));
 
           const amount = calculateTotalPrice();
+          const serviceFee= amount*0.01;
           const orderData = {
               totalAmount: Number(amount),
               date: checkoutData.date,
               productDetail: products, 
-              location: checkoutData.deliveryLocation
+              location: checkoutData.deliveryLocation,
+              serviceFee:serviceFee
           };
 
           fetch('http://127.0.0.1:3000/api/payment/purchase', {

@@ -10,7 +10,7 @@ const Dialogbox = ({ onDialogSubmit }) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
             <div className="bg-white p-8 rounded-md shadow-md">
-                <h2 className="text-lg font-semibold mb-4">Enter Verification Code</h2>
+                <h2 className="text-lg font-semibold mb-4">We have sent a Verification code to your Email. Please enter Verification Code</h2>
                 <input
                     type="text"
                     value={verificationCode}
