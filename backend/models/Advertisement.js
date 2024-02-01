@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const advertisementSchema = new mongoose.Schema({
   userId: {
@@ -32,4 +33,11 @@ const advertisementSchema = new mongoose.Schema({
 
 const Advertisement = mongoose.model("Advertisement", advertisementSchema);
 
-module.exports = Advertisement;
+function AdvertisementValidater(product) {
+  const schem = Joi.object({
+    description: Joi.string().required().min(10).max(255),
+  });
+
+  return schem.validate(product);
+}
+module.exports = { Advertisement, AdvertisementValidater };
