@@ -13,8 +13,8 @@ const message = require("./routes/message");
 const payment = require("./routes/payment");
 
 // const mongoURL ="mongodb+srv://eyobderese:jobman2008@cluster0.32apy9n.mongodb.net/?retryWrites=true&w=majority";
-// const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
-const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye_test"; // this is for test env
+const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
+// const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye_test"; // this is for test env
 mongoose
   .connect(mongoURL)
   .then(() => {

@@ -52,7 +52,10 @@ const SignUp = () => {
           });
     
           if (!response.ok) {
-            throw new Error('Network response was not ok.');
+            return response.text().then((text)=>{
+              throw new Error(text);
+            })
+            
           } else{
             const data = await response.json()
             console.log(data); 
@@ -66,7 +69,7 @@ const SignUp = () => {
           }
     
         } catch (error) {
-          alert("Error in signing in")
+          alert(error.message)
           console.error('Opps there is something wrong when signing you up:', error.message);
           
         }
