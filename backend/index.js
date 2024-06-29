@@ -19,7 +19,10 @@ const mongoURL = process.env.CONNECTION_URL;
 mongoose
   .connect(mongoURL)
   .then(() => {
-    console.log("The server is conected...");
+    console.log("The database is conected...");
+    app.listen(process.env.PORT, () => {
+      console.log(`The server is Runnig on port ${process.env.PORT}`);
+    });
   })
   .catch((e) => {
     console.log("somting bad happen", e);
@@ -41,9 +44,5 @@ app.get('/', (req, res)=>{
   res.status(200).send('welcome amigos');
 })
 
-const PORT = 3000;
-const server = app.listen(PORT, () => {
-  console.log(`The server is Runnig on port number ${PORT}`);
-});
 
-module.exports = server;
+module.exports = app;
