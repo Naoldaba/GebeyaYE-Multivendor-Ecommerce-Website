@@ -19,7 +19,7 @@ const createAdvert = async (req, res) => {
     });
 
     if (req.file) {
-      const serverBaseURL = "http://localhost:3000";
+      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
       newAdvert.banner = `${serverBaseURL}/public/images/${req.file.filename}`;
     }
     const savedAdvert = await newAdvert.save();

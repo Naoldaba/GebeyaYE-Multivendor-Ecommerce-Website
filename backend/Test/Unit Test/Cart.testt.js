@@ -18,7 +18,6 @@ app.use("/", router);
 describe("Cart Routes", () => {
   beforeEach(() => {
     auth.mockImplementation((req, res, next) => {
-      // Mocking the auth middleware
       req.user = { userId: "1234567890" };
       next();
     });

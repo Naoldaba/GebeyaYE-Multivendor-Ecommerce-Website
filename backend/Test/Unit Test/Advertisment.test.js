@@ -39,7 +39,7 @@ describe("createAdvert function", () => {
       userName: "Test User",
       description: mockRequest.body.description,
       status: "Pending",
-      banner: "http://localhost:3000/public/images/test-banner.jpg",
+      banner: "https://gebeyaye-backend.vercel.app/public/images/test-banner.jpg",
     });
 
     await createAdvert(mockRequest, mockResponse);
@@ -57,7 +57,7 @@ describe("createAdvert function", () => {
       userName: "Test User",
       description: mockRequest.body.description,
       status: "Pending",
-      banner: "http://localhost:3000/public/images/test-banner.jpg",
+      banner: "https://gebeyaye-backend.vercel.app/public/images/test-banner.jpg",
     });
   });
 

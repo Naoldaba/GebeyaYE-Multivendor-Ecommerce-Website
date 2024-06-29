@@ -80,7 +80,7 @@ const createProduct = async (req, res) => {
     newProduct.owner = req.user._id;
 
     if (req.file) {
-      const serverBaseURL = "http://localhost:3000";
+      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
 
       newProduct.imageurl = `${serverBaseURL}/public/images/${req.file.filename}`;
       console.log(newProduct);

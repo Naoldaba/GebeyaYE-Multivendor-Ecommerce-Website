@@ -44,7 +44,7 @@ const userRegister = async (req, res) => {
 
     if (role == "Vendor") {
       const { licence, profilePicture } = req.files;
-      const serverBaseURL = "http://localhost:3000";
+      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
 
       user.licence = `${serverBaseURL}/public/images/${licence[0].filename}`;
       user.profilePicture = `${serverBaseURL}/public/images/${profilePicture[0].filename}`;

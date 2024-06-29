@@ -304,7 +304,7 @@ describe("createProduct function", () => {
       stock: 10,
       category: "Test Category",
       owner: "userId123",
-      imageurl: "http://localhost:3000/public/images/test_image.jpg",
+      imageurl: "https://gebeyaye-backend.vercel.app/public/images/test_image.jpg",
     };
     jest.spyOn(Product.prototype, "save").mockResolvedValue(mockSavedProduct);
 
