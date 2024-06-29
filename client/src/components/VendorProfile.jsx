@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useContext } from 'react';
 import {useHistory} from "react-router-dom";
-import { AuthContext } from "../components/AuthContext";
+import { AuthContext } from "./AuthContext";
 
 const VendorProfile = ({ vendorProfile }) => {
   const history = useHistory();

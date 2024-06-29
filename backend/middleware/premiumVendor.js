@@ -7,7 +7,7 @@ function Premiumvendor(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, "jobman2008");
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     console.log(decoded);
 
     if (!decoded.isPremium) {

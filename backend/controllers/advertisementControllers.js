@@ -10,11 +10,6 @@ const createAdvert = async (req, res) => {
 
     const userId = req.user._id;
     const user = await User.findById(userId);
-    const { error } = AdvertisementValidater(req.body.description);
-
-    if (error) {
-      return res.status(400).send(error.details[0].message);
-    }
 
     let newAdvert = new Advertisement({
       userId: userId,

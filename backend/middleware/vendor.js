@@ -7,7 +7,7 @@ function vendor(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, "jobman2008");
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     if (decoded.role != "Vendor") {
       return res.status(401).send("Bad request");
     } else {

@@ -41,7 +41,6 @@ const BannerComponent = () => {
         alert("banner successfully sent for approval");
         history.push('/product management');
       } else {
-        
         console.error('Failed to upload advertisement');
       }
     } catch (error) {

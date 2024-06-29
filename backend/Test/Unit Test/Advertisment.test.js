@@ -4,7 +4,7 @@ const {
   getAdvert,
   changeAdvertStatus,
 } = require("../../controllers/advertisementControllers");
-const Advertisement = require("../../models/Advertisement");
+const {Advertisement} = require("../../models/Advertisement");
 const { User } = require("../../models/User");
 const mongoose = require("mongoose");
 

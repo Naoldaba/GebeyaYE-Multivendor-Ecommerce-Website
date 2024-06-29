@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const app = express();
@@ -11,10 +12,10 @@ const order = require("./routes/Order");
 const advert = require("./routes/advertisment");
 const message = require("./routes/message");
 const payment = require("./routes/payment");
+dotenv.config();
 
-// const mongoURL ="mongodb+srv://eyobderese:jobman2008@cluster0.32apy9n.mongodb.net/?retryWrites=true&w=majority";
-const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye";
-// const mongoURL = "mongodb://0.0.0.0:27017/gebeyaye_test"; // this is for test env
+const mongoURL = process.env.CONNECTION_URL;
+
 mongoose
   .connect(mongoURL)
   .then(() => {
