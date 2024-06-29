@@ -19,7 +19,7 @@ const PaymentForm = () => {
   const handlePayment = async () => {
     console.log('Processing payment...');
     console.log({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username });
-    fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
+    fetch('https://gebeyaye-backend.vercel.app/api/payment/verifyaccount', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const PaymentForm = () => {
 
   useEffect(() => {
     if (verificationCode) {
-      fetch('http://127.0.0.1:3000/api/payment/pay', {
+      fetch('https://gebeyaye-backend.vercel.app/api/payment/pay', {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

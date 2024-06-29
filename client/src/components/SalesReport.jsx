@@ -9,7 +9,7 @@ const SalesReportPage = () => {
     
     const fetchSalesData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:3000/api/order/sales_report', {
+        const response = await fetch('https://gebeyaye-backend.vercel.app/api/order/sales_report', {
           method: 'GET',
           headers: {
             'authToken': authToken,

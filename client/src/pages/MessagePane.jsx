@@ -14,7 +14,7 @@ const MessagePage = ({ userType, userId }) => {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/message/myinbox`, {
+                const response = await fetch(`https://gebeyaye-backend.vercel.app/api/message/myinbox`, {
                     method:"GET",
                     headers:{
                         'authToken':authToken
@@ -36,7 +36,7 @@ const MessagePage = ({ userType, userId }) => {
 
     const sendMessage = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/message/send', {
+            const response = await fetch('https://gebeyaye-backend.vercel.app/api/message/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

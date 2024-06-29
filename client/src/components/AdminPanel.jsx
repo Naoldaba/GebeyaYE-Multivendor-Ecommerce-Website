@@ -10,7 +10,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const fetchMessagesForAdmin = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/message/inboxes',{
+                const response = await fetch('https://gebeyaye-backend.vercel.app/api/message/inboxes',{
                     method:"GET",
                     headers:{
                         'authToken': authToken
@@ -38,7 +38,7 @@ const AdminPanel = () => {
     const sendReply = async () => {
         try {
             console.log(selectedMessage._id)
-            const response = await fetch(`http://localhost:3000/api/message/sendreply`, {
+            const response = await fetch(`https://gebeyaye-backend.vercel.app/api/message/sendreply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ const AdminAdvertisements = () => {
   
     const handleApproval = async (advertisementId, approved) => {
       try {
-        const response = await fetch(`http://localhost:3000/api/advert/${advertisementId}`, {
+        const response = await fetch(`https://gebeyaye-backend.vercel.app/api/advert/${advertisementId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const AdminAdvertisements = () => {
 
     const handleReject = async (advertisementId, rejected) => {
       
-        fetch(`http://localhost:3000/api/advert/${advertisementId}`, {
+        fetch(`https://gebeyaye-backend.vercel.app/api/advert/${advertisementId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const AdminAdvertisements = () => {
 
     const handleDelete = async (adId, deleted) => {
       
-        fetch(`http://localhost:3000/api/advert/${adId}`, {
+        fetch(`https://gebeyaye-backend.vercel.app/api/advert/${adId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const AdminAdvertisements = () => {
     
       const fetchAdvertisements = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/advert', {
+          const response = await fetch('https://gebeyaye-backend.vercel.app/api/advert', {
             headers: {
               'authToken': authToken,
             },
@@ -124,7 +124,7 @@ const AdminAdvertisements = () => {
     
       const fetchAllAdvertisements = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/advert/all', {
+          const response = await fetch('https://gebeyaye-backend.vercel.app/api/advert/all', {
             method: "GET",
             headers:{
               'authToken': authToken,

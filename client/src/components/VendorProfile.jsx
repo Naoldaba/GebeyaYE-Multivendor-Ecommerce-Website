@@ -17,7 +17,7 @@ const VendorProfile = ({ vendorProfile }) => {
     const confirmation = window.confirm('Are you sure you want to upgrade your account to premium?');
     
     if (confirmation) {
-        fetch('http://localhost:3000/api/user/upgrade', {
+        fetch('https://gebeyaye-backend.vercel.app/api/user/upgrade', {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -46,7 +46,7 @@ const VendorProfile = ({ vendorProfile }) => {
     const confirmation = window.confirm('Are you sure you want to downgrade your account to Regular?');
     
     if (confirmation) {
-        fetch('http://localhost:3000/api/user/downgrade', {
+        fetch('https://gebeyaye-backend.vercel.app/api/user/downgrade', {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

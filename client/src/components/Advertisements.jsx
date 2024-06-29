@@ -8,7 +8,7 @@ const Advertisements = () => {
   useEffect(() => {
     const fetchAdvertisements = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/advert/all', {
+        const response = await fetch('https://gebeyaye-backend.vercel.app/api/advert/all', {
           method: "GET",
           headers:{
             'authToken': authToken,

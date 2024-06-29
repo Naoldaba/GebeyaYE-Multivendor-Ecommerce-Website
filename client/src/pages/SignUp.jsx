@@ -45,7 +45,7 @@ const SignUp = () => {
             formData.append("profilePicture", profilePicture);  
           }
     
-          fetch("http://127.0.0.1:3000/api/user", {
+          fetch("https://gebeyaye-backend.vercel.app/api/user", {
             method: "POST",
             body: formData,
           })

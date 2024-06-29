@@ -16,7 +16,7 @@ const ApplicationStatus = () => {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/vendor', {
+      const response = await fetch('https://gebeyaye-backend.vercel.app/api/user/vendor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

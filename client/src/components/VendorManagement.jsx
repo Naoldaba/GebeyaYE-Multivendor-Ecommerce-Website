@@ -12,7 +12,7 @@ const VendorManagement = () => {
 
         const fetchVendors = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/user/approvedVendor', {
+                const response = await fetch('https://gebeyaye-backend.vercel.app/api/user/approvedVendor', {
                     method: 'GET',
                     headers: {
                         "authToken": authToken,
@@ -47,7 +47,7 @@ const VendorManagement = () => {
     };
 
     const removeVendor = (vendorId) => {
-        fetch(`http://localhost:3000/api/user/${vendorId}`, {
+        fetch(`https://gebeyaye-backend.vercel.app/api/user/${vendorId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${authToken}`,

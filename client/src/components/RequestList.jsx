@@ -13,7 +13,7 @@ const RequestList = () => {
     
       const fetchRequests = async () => {
         try {
-          const response = await fetch('http://127.0.0.1:3000/api/user', {
+          const response = await fetch('https://gebeyaye-backend.vercel.app/api/user', {
             method: "GET",
             headers: {
               'authToken': authToken,
@@ -52,7 +52,7 @@ const RequestList = () => {
 
     const handleApprove = async (requestId) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/user/changePendding/${requestId} `, {
+            const response = await fetch(`https://gebeyaye-backend.vercel.app/api/user/changePendding/${requestId} `, {
                 method: 'PUT',
                 headers: {
                   'authToken': authToken,

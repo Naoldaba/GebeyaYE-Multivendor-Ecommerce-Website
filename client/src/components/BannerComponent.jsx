@@ -27,7 +27,7 @@ const BannerComponent = () => {
       const formData = new FormData();
       formData.append('banner', advertisement);
       formData.append('description', description);
-      const response = await fetch('http://localhost:3000/api/advert', {
+      const response = await fetch('https://gebeyaye-backend.vercel.app/api/advert', {
         method: 'POST',
         headers:{
           'authToken': authToken

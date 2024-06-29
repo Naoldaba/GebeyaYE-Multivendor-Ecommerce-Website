@@ -65,7 +65,7 @@ const VendorDashboard = () => {
     
       const fetchData = async () => {
         try {
-          const response = await fetch('http://127.0.0.1:3000/api/product/myproduct', {
+          const response = await fetch('https://gebeyaye-backend.vercel.app/api/product/myproduct', {
             method: "GET",
             headers: {
               "authToken": authToken,
@@ -86,7 +86,7 @@ const VendorDashboard = () => {
     
       const fetchMe = async () => {
         try {
-          const response = await fetch('http://127.0.0.1:3000/api/user/me', {
+          const response = await fetch('https://gebeyaye-backend.vercel.app/api/user/me', {
             method: "GET",
             headers: {
               'authToken': authToken,

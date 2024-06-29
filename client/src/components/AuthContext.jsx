@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     
     const login = async (name, password, role) => {
         try {
-            const response = await fetch('http://127.0.0.1:3000/api/auth', {
+            const response = await fetch('https://gebeyaye-backend.vercel.app/api/auth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
                 const data = await response.json();
                 console.log(data);
                 if (data.token) {
-                    const userDetailsResponse = await fetch('http://127.0.0.1:3000/api/user/me', {
+                    const userDetailsResponse = await fetch('https://gebeyaye-backend.vercel.app/api/user/me', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

@@ -52,6 +52,14 @@ const ProductCatalog = ({ products, addToCart, cart }) => {
         setSelectedCategory(category);
         setSelectedProduct(null); 
     };
+    
+    if(products.length==0){
+        return (
+            <div className='flex justify-center items-center max-w-full'>
+                <p className='text-3xl'>loading...</p>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-wrap justify-around product-catalog max-w-full rounded-lg text-center mx-auto my-20">

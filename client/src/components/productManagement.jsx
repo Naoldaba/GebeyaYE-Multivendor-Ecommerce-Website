@@ -15,7 +15,7 @@ const ProductManagement = () => {
     const abortController = new AbortController();
     const signal = abortController.signal;
   
-    fetch('http://127.0.0.1:3000/api/product/myproduct', { 
+    fetch('https://gebeyaye-backend.vercel.app/api/product/myproduct', { 
       method:"GET",
       headers: {
         "authToken": authToken
@@ -48,7 +48,7 @@ const ProductManagement = () => {
 
   const handleRemove =(productId) => {
    
-    fetch(`http://localhost:3000/api/product/${productId}`, {
+    fetch(`https://gebeyaye-backend.vercel.app/api/product/${productId}`, {
       method: 'DELETE',
       headers:{
         'authToken': authToken,
@@ -85,7 +85,7 @@ const ProductManagement = () => {
       )
     );
   
-    fetch(`http://localhost:3000/api/product/${productId}`, {
+    fetch(`https://gebeyaye-backend.vercel.app/api/product/${productId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const ProductManagement = () => {
       )
     );
   
-    fetch(`http://localhost:3000/api/product/${productId}`, {
+    fetch(`https://gebeyaye-backend.vercel.app/api/product/${productId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

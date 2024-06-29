@@ -8,7 +8,7 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/order', {
+        const response = await fetch('https://gebeyaye-backend.vercel.app/api/order', {
           method:"GET",
           headers:{
             'authToken': authToken

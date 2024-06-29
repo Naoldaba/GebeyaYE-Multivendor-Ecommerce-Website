@@ -30,7 +30,7 @@ const AddProductForm = () => {
       formData.append('category', category);
       formData.append('stock', stock);
 
-      const response = await fetch('http://127.0.0.1:3000/api/product', {
+      const response = await fetch('https://gebeyaye-backend.vercel.app/api/product', {
         method: 'POST',
         headers: {
           'authToken': authToken,

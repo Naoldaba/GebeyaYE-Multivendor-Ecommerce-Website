@@ -36,7 +36,7 @@ function App() {
 
     const fetchProductData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/product', {
+        const response = await fetch('https://gebeyaye-backend.vercel.app/api/product', {
           method: 'GET',
           signal: signal
         });
@@ -64,7 +64,7 @@ function App() {
   
     if (!isFound) {
       try {
-        const response = await fetch(`http://localhost:3000/api/cart`, {
+        const response = await fetch(`https://gebeyaye-backend.vercel.app/api/cart`, {
           method: 'POST',
           headers: {
             "authToken":authToken,

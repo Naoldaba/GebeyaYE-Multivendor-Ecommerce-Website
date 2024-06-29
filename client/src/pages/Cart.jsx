@@ -39,7 +39,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
     
         const fetchCart = async () => {
           try {
-            const response = await fetch(`http://localhost:3000/api/cart`, {
+            const response = await fetch(`https://gebeyaye-backend.vercel.app/api/cart`, {
               method: "GET",
               headers: {
                 "authToken": authToken,
@@ -77,7 +77,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
 
     const handleDelete = async (productId) => {
         try {
-          const response = await fetch(`http://localhost:3000/api/cart/${productId}`, {
+          const response = await fetch(`https://gebeyaye-backend.vercel.app/api/cart/${productId}`, {
             method: 'DELETE',
             headers:{
               "authToken": authToken,
@@ -106,7 +106,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
         event.preventDefault();
         console.log(checkoutData.senderAccount); 
         
-        fetch('http://127.0.0.1:3000/api/payment/verifyaccount', {
+        fetch('https://gebeyaye-backend.vercel.app/api/payment/verifyaccount', {
           method: "POST",
           headers:{
             "Content-Type": "application/json"
@@ -147,7 +147,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
               serviceFee:serviceFee
           };
 
-          fetch('http://127.0.0.1:3000/api/payment/purchase', {
+          fetch('https://gebeyaye-backend.vercel.app/api/payment/purchase', {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -157,7 +157,7 @@ const Cart = ({cart, setCart, cartCount, setCartCount}) => {
           .then((response)=>{
             if (response.ok){
               alert("Payment Successfull");
-              fetch('http://localhost:3000/api/order', {
+              fetch('https://gebeyaye-backend.vercel.app/api/order', {
                 method: 'POST',
                 headers: {
                     "authToken": authToken,
