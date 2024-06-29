@@ -37,6 +37,10 @@ app.use("/api/advert", advert);
 app.use("/api/message", message);
 app.use("/api/payment", payment);
 
+app.get('/', (req, res)=>{
+  res.status(200).send('welcome amigos');
+})
+
 const PORT = 3000;
 const server = app.listen(PORT, () => {
   console.log(`The server is Runnig on port number ${PORT}`);
