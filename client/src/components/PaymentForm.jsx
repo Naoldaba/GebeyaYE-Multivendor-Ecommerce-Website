@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Dialogbox from './Dialogbox';
 
 const PaymentForm = () => {
   const [selectedBank, setSelectedBank] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [selectedPackage, setSelectedPackage] = useState(0);
-  const [username, setUsername]= useState('');
-  const [showDialog, setShowDialog] = useState(false); 
+  const [username, setUsername] = useState('');
+  const [showDialog, setShowDialog] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const history= useHistory();
+  const [dialogMessage, setDialogMessage] = useState('');
+  const history = useHistory();
 
   const handleDialogSubmit = (code) => {
     setVerificationCode(code);
@@ -17,28 +18,29 @@ const PaymentForm = () => {
   };
 
   const handlePayment = async () => {
-    console.log('Processing payment...');
-    console.log({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username });
-    fetch('https://gebeyaye-backend.vercel.app/api/payment/verifyaccount', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username })
-    })
-      .then((response) => {
-        if (response.ok) {
-          setShowDialog(true);
-        } else {
-          response.text().then(text=>{
-            throw new Error(text);
-          })
-        }
-      })
-      .catch((error) => {
-        alert(error.message);
-      })
+    try {
+      const response = await fetch('https://gebeyaye-backend.vercel.app/api/payment/verifyaccount', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ accountNumber: accountNumber, balance: Number(selectedPackage), username: username })
+      });
+  
+      if (response.ok) {
+        setDialogMessage("A verification email has been sent. Please enter the code from your email to proceed.");
+        setShowDialog(true); 
+      } else {
+        const errorText = await response.text();
+        setDialogMessage(errorText || "An error occurred. Please try again.");
+        setShowDialog(true);
+      }
+    } catch (error) {
+      setDialogMessage(error.message || "An error occurred. Please try again.");
+      setShowDialog(true);
+    }
   };
+  
 
   useEffect(() => {
     if (verificationCode) {
@@ -51,17 +53,18 @@ const PaymentForm = () => {
       })
         .then((response) => {
           if (response.ok) {
-            alert("Payment Successful");
-            history.push('/login');
+            setDialogMessage("Payment Successful");
+            setShowDialog(true); 
           } else {
             return response.text().then(text => {
-              throw new Error(text);
-            })
+              setDialogMessage(text);
+              setShowDialog(true); 
+            });
           }
         })
         .catch((error) => {
-          alert(error.message);
-          history.push('/');
+          setDialogMessage(error.message);
+          setShowDialog(true);
         });
     }
   }, [verificationCode]);
@@ -70,7 +73,6 @@ const PaymentForm = () => {
     <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-md shadow-lg">
       <h1 className="text-3xl font-bold text-center mb-6">Payment Details</h1>
       <div className="mb-4">
-        <div className="mb-4">
         <label htmlFor="username" className="block text-lg mb-2">Username</label>
         <input
           id="username"
@@ -82,6 +84,7 @@ const PaymentForm = () => {
           required
         />
       </div>
+      <div className="mb-4">
         <label htmlFor="bank" className="block text-lg mb-2">Select Bank</label>
         <select
           id="bank"
@@ -107,7 +110,6 @@ const PaymentForm = () => {
           required
         />
       </div>
-      
       <div className="mb-4">
         <label htmlFor="package" className="block text-lg mb-2">Select Package</label>
         <select
@@ -128,7 +130,18 @@ const PaymentForm = () => {
       >
         Pay Now
       </button>
-      {showDialog && <Dialogbox onDialogSubmit={handleDialogSubmit}/>}
+      {showDialog && 
+        <Dialogbox 
+          onDialogSubmit={handleDialogSubmit}
+          message={dialogMessage}
+          onClose={() => {
+            setShowDialog(false);
+            if (dialogMessage.includes("Payment Successful")) {
+              history.push('/login');
+            }
+          }}
+        />
+      }
     </div>
   );
 };

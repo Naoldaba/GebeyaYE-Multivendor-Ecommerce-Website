@@ -49,7 +49,6 @@ const getAllMessages = async (req, res) => {
 const sendReply = async (req, res) => {
   try {
     const msg_id = req.body.msg_id;
-    console.log(msg_id);
     let msg = await Message.findById(msg_id);
 
     if (req.body.reply) {

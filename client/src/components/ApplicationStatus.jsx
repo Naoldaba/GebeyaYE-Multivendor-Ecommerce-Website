@@ -16,6 +16,7 @@ const ApplicationStatus = () => {
 
   const fetchStatus = async () => {
     try {
+      //To_change https://gebeyaye-backend.vercel.app/api/user/vendor
       const response = await fetch('https://gebeyaye-backend.vercel.app/api/user/vendor', {
         method: 'POST',
         headers: {
@@ -32,7 +33,6 @@ const ApplicationStatus = () => {
       if (!data) {
         throw new Error('Empty response or invalid JSON');
       }
-      console.log(data)
       setStatus(data[0].status);
       if (data[0].isPremium) {
         setIsPremium(data[0].isPremium);
@@ -56,7 +56,7 @@ const ApplicationStatus = () => {
 
     return (
       <div>
-        {status === 'pendding' ? (
+        {status === 'pending' ? (
           <div className=''>
             <img src={pending} className='w-40 mx-auto' />
             <p className='text-2xl'>Your application is pending approval...</p>

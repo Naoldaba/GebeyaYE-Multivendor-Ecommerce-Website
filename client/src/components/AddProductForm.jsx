@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { useHistory } from 'react-router-dom';
-
+import CustomDialog from './CustomDialog';
 
 const AddProductForm = () => {
   const [productName, setProductName] = useState('');
@@ -12,6 +12,9 @@ const AddProductForm = () => {
   const [stock, setStock] = useState(0);
   const { authToken } = useContext(AuthContext);
   const history = useHistory();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -39,14 +42,23 @@ const AddProductForm = () => {
       });
 
       if (response.ok) {
-        console.log('Product posted successfully!');
-        alert("product posted successfully");
-        history.push('./product management');
+        setDialogMessage('Product posted successfully!');
+        setIsDialogOpen(true);
       } else {
-        console.error('Failed to post product data');
+        setDialogMessage('Failed to post product data');
+        setIsDialogOpen(true);
       }
     } catch (error) {
       console.error('Error posting product data:', error);
+      setDialogMessage('An error occurred while posting product data');
+      setIsDialogOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsDialogOpen(false);
+    if (dialogMessage === 'Product posted successfully!') {
+      history.push('./product-management');
     }
   };
 
@@ -111,11 +123,18 @@ const AddProductForm = () => {
         </label>
         <label className='text-lg text-gray-700 font-semibold'>
           Category
-          <input
-            type='text'
+          <select
             className='w-full p-2 border rounded'
+            value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
+          >
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Stationary">Stationary</option>
+            <option value="Clothes">Clothes</option>
+            <option value="Furniture">Furniture</option>
+            <option value="DigitalArt">DigitalArt</option>
+          </select>
         </label>
         <label className='text-lg text-gray-700 font-semibold'>
           Stock
@@ -129,6 +148,13 @@ const AddProductForm = () => {
           Post Product
         </button>
       </form>
+
+      <CustomDialog
+        isOpen={isDialogOpen}
+        title="Product Submission"
+        message={dialogMessage}
+        onClose={closeModal}
+      />
     </div>
   );
 };

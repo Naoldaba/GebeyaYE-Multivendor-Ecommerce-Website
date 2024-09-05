@@ -56,7 +56,6 @@ const VendorManagement = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log(`Vendor with ID ${vendorId} has been removed`);
                     setVendors(prevVendors => prevVendors.filter(vendor => vendor.id !== vendorId));
                 } else {
                     console.error('Failed to remove vendor');
@@ -73,7 +72,7 @@ const VendorManagement = () => {
             {vendors.map((vendor, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6'>
                 <div className='flex flex-wrap items-center'>
-                    <img src={vendor.profilePicture} alt="Profile" className='w-1/2 mr-6' />
+                    <img src={vendor.profilePicture} alt="Profile" className='mr-6' />
                     <div>
                     <div className='mb-4'>
                         <p>Name: {vendor.name}</p>
@@ -110,7 +109,7 @@ const VendorManagement = () => {
 
                     <button
                         className='bg-blue-500 text-white p-2 w-full mx-auto mt-4'
-                        onClick={() => removeVendor(vendor.id, authToken)} // Pass the vendor ID to the banning function
+                        onClick={() => removeVendor(vendor.id, authToken)} 
                         type='button'
                     >
                         Ban Vendor

@@ -101,7 +101,6 @@ describe("GET /api/user/me", () => {
       .set("authToken", authToken);
 
     expect(response.status).toBe(200);
-    console.log(response.body);
     expect(response.body[0]).toHaveProperty("username", "testuser");
 
     expect(response.body[0]).toHaveProperty("name", "Test User");

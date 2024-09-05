@@ -6,7 +6,6 @@ const { User } = require("../models/User");
 
 const createAdvert = async (req, res) => {
   try {
-    console.log(req.body);
 
     const userId = req.user._id;
     const user = await User.findById(userId);
@@ -19,8 +18,7 @@ const createAdvert = async (req, res) => {
     });
 
     if (req.file) {
-      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
-      newAdvert.banner = `${serverBaseURL}/public/images/${req.file.filename}`;
+      newAdvert.banner = req.file.path
     }
     const savedAdvert = await newAdvert.save();
 

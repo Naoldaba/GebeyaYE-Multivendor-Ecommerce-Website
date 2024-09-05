@@ -76,7 +76,6 @@ function App() {
         if (response.ok) {
           setCart((prevCart) => [...prevCart, product]);
           setCartCount(cartCount + 1);
-          console.log('Item added to cart');
         } else {
           console.log('Item could not be added');
         }
@@ -112,10 +111,10 @@ function App() {
             <Route path="/signup" component={SignUp} />
             <Route exact path="/about" component={AboutUs} />
             <Route path="/about/contact" component={MessagePane}/>
-            <Route path="/application status" component={ApplicationStatus}/>
+            <Route path="/application-status" component={ApplicationStatus}/>
             <Route path="/success order" component={OrderSuccess} />
             <Route path="/failed order" component={OrderFailed} />
-            <Route path="/product management" component={ProductManagement} />
+            <Route path="/product-management" component={ProductManagement} />
             <Route path="/login/vendorpending" component={pendingVendor} />
             <Route path="/login/buyerlogin" component={successBuyer} />
             <Route path="/login/loginfailed" component={failedLogin} />

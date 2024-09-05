@@ -11,22 +11,22 @@ const getAllProduct = async (req, res) => {
 };
 const search = async (req, res) => {
   try {
-    const { category, productName } = req.query;
+    const { category = 'all', productName = '' } = req.query;
     let query = {};
 
-    if (category && category !== "none") {
+    if (category !== 'all') {
       query.category = category;
     }
 
     if (productName) {
-      query.name = new RegExp(`.*${productName}.*`, "i");
+      query.name = new RegExp(productName, "i");
     }
 
     const results = await Product.find(query);
-    res.status(200).send(results);
+    res.status(200).json(results);
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: "Internal Server Error" });
+    console.error('Search error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -49,7 +49,6 @@ const getProduct = async (req, res) => {
 
 const getOwndProduct = async (req, res) => {
   try {
-    console.log("hi there");
     const ownerId = req.user._id;
     const products = await Product.find({ owner: ownerId });
     res.status(200).send(products);
@@ -80,10 +79,8 @@ const createProduct = async (req, res) => {
     newProduct.owner = req.user._id;
 
     if (req.file) {
-      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
 
-      newProduct.imageurl = `${serverBaseURL}/public/images/${req.file.filename}`;
-      console.log(newProduct);
+      newProduct.imageurl = req.file.path
     }
 
     const savedProduct = await newProduct.save();

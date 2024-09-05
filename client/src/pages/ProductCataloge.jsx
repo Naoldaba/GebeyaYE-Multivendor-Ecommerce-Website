@@ -2,10 +2,13 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../components/AuthContext';
 import { useHistory } from 'react-router-dom';
 import Advertisements from '../components/Advertisements';
+import CustomDialog from '../components/CustomDialog';  
 
 const ProductCatalog = ({ products, addToCart, cart }) => {
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(null); // Add selectedCategory state
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false); 
+    const [dialogMessage, setDialogMessage] = useState('');  
     const { isAuthenticated } = useContext(AuthContext);
     const history = useHistory();
 
@@ -22,10 +25,9 @@ const ProductCatalog = ({ products, addToCart, cart }) => {
     const handleAddToCart = (item) => {
         if (isAuthenticated && type === 'Buyer') {
             addToCart(item);
-        } else if (type !== 'Vendor' || type!== "Admin") {
-            alert('Please login first');
-            history.push('/login');
-            console.log('Please log in first');
+        } else if (type !== 'Vendor' || type !== 'Admin') {
+            setDialogMessage('Please login first');
+            setIsDialogOpen(true); 
         }
     };
 
@@ -53,23 +55,43 @@ const ProductCatalog = ({ products, addToCart, cart }) => {
         setSelectedProduct(null); 
     };
     
-    if(products.length==0){
+    if (products.length === 0) {
         return (
             <div className='flex justify-center items-center max-w-full'>
-                <p className='text-3xl'>loading...</p>
+                <p className='text-3xl'>Loading...</p>
             </div>
-        )
+        );
     }
 
     return (
         <div className="flex flex-wrap justify-around product-catalog max-w-full rounded-lg text-center mx-auto my-20">
             <Advertisements />
             <div className=''>
-                <div className="categories flex flex-wrap gap-3 ml-16">
-                    <button onClick={() => filterProductsByCategory(null)}>All</button>
-                    <button onClick={() => filterProductsByCategory('Electronics')}>Electonics</button>
-                    <button onClick={() => filterProductsByCategory('Clothes')}>Clothes</button>
-                    <button onClick={() => filterProductsByCategory('Furniture')}>Furniture</button>
+            <div className="categories flex flex-wrap gap-3 ml-16">
+                    <button 
+                        onClick={() => filterProductsByCategory(null)} 
+                        className={selectedCategory === null ? 'font-bold' : ''}
+                    >
+                        All
+                    </button>
+                    <button 
+                        onClick={() => filterProductsByCategory('Electronics')} 
+                        className={selectedCategory === 'Electronics' ? 'font-bold' : ''}
+                    >
+                        Electronics
+                    </button>
+                    <button 
+                        onClick={() => filterProductsByCategory('Clothes')} 
+                        className={selectedCategory === 'Clothes' ? 'font-bold' : ''}
+                    >
+                        Clothes
+                    </button>
+                    <button 
+                        onClick={() => filterProductsByCategory('Furniture')} 
+                        className={selectedCategory === 'Furniture' ? 'font-bold' : ''}
+                    >
+                        Furniture
+                    </button>
                 </div>
                 <div className="products grid gap-x-4 gap-y-5  grid-cols-2 md:grid-cols-3">   
                 {products
@@ -87,25 +109,30 @@ const ProductCatalog = ({ products, addToCart, cart }) => {
                                     <p className="text-gray-600 mb-2 w-full">{product.description}</p>
                                 )}
                                 
-                                <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={()=>handleAddToCart(product)} >Add to Cart</button> 
+                                <button className="bg-sky-500 text-white p-1 w-full active:bg-black" onClick={() => handleAddToCart(product)} >Add to Cart</button> 
                                 <h1 className='font-bold'>Share</h1>
                                 <div className='flex gap-1'>
                                     <button onClick={() => handleSocialShare(product.name, 'facebook')} className="bg-blue-500 text-white p-1 w-full">Facebook</button>
                                     <button onClick={() => handleSocialShare(product.name, 'twitter')} className="bg-blue-400 text-white p-1 w-full">Twitter</button>
                                     <button onClick={() => handleSocialShare(product.name, 'instagram')} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-1 w-1/3">Instagram</button>
                                 </div> 
+                            </div> 
                         </div> 
-                    </div> 
                     ))}
                 </div>
             </div>
+
+            <CustomDialog
+                isOpen={isDialogOpen}
+                title="Authentication Required"
+                message={dialogMessage}
+                onClose={() => {
+                    setIsDialogOpen(false);
+                    history.push('/login'); 
+                }}
+            />
         </div>
     );
 };
 
 export default ProductCatalog;
-
-
-
-
- 

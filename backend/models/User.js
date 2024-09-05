@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Buyer", "Vendor", "Admin", "vendorPendding"],
+    enum: ["Buyer", "Vendor", "Admin", "vendorpending"],
     required: true,
   },
 
@@ -122,10 +122,11 @@ function UserValidater(product) {
     email: Joi.string().required().min(5).max(255).email(),
     password: joiPassword
       .string()
-      .minOfSpecialCharacters(2)
-      .minOfLowercase(2)
-      .minOfUppercase(2)
-      .minOfNumeric(2)
+      .min(8)
+      .minOfSpecialCharacters(1)
+      .minOfLowercase(1)
+      .minOfUppercase(1)
+      .minOfNumeric(1)
       .noWhiteSpaces()
       .onlyLatinCharacters()
       .required(),

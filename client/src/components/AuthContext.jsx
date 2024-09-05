@@ -6,16 +6,19 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userType, setUserType] = useState(null);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
     const [authToken, setAuthToken] = useState(() => {
-
         const storedToken = localStorage.getItem('authToken');
         if (storedToken) {
             setIsAuthenticated(true);
             return storedToken;
         }
-        return null;    
+        return null;
     });
-    const history=useHistory();
+    const history = useHistory();
     
     const login = async (name, password, role) => {
         try {
@@ -32,7 +35,6 @@ export const AuthProvider = ({ children }) => {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 if (data.token) {
                     const userDetailsResponse = await fetch('https://gebeyaye-backend.vercel.app/api/user/me', {
                         method: 'GET',
@@ -43,20 +45,22 @@ export const AuthProvider = ({ children }) => {
                     });
                     if (userDetailsResponse.ok){
                         const userDetails= await userDetailsResponse.json();
-                    
-                        if (userDetails[0].role === role) {
-                            if (role === 'Vendor' && userDetails[0].status === 'approved') {
-                                if (userDetails[0].payment==="pendding"){
-                                    return "pendingPayment"
+                        console.log(userDetails);
+                        const loggedInUser = userDetails[0];
+                        setUser(loggedInUser);
+                        localStorage.setItem('user', JSON.stringify(loggedInUser)); 
+                        if (loggedInUser.role === role) {
+                            if (role === 'Vendor' && loggedInUser.status === 'approved') {
+                                if (loggedInUser.payment === "pending") {
+                                    return "pendingPayment";
                                 }
                                 setAuthToken(data.token);
                                 localStorage.setItem('authToken', data.token);
                                 setIsAuthenticated(true);
                                 return "vendorLogin";
-                            } else if(role==="Vendor" && userDetails[0].status==='pendding'){
+                            } else if(role === "Vendor" && loggedInUser.status === 'pending'){
                                 return "vendorPending";
-                            }
-                            else if (role === 'Buyer') {
+                            } else if (role === 'Buyer') {
                                 setAuthToken(data.token);
                                 localStorage.setItem('authToken', data.token);
                                 setIsAuthenticated(true);
@@ -83,18 +87,18 @@ export const AuthProvider = ({ children }) => {
             return "failedLogin";
         }
     };
-    
 
     const logout = () => {
         setAuthToken(null);
         localStorage.removeItem('authToken');
+        localStorage.removeItem('user'); 
         setIsAuthenticated(false);
         setUserType(null);
-        localStorage.removeItem('userType');
+        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, setUserType, userType, authToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, setUserType, userType, authToken, user }}>
             {children}
         </AuthContext.Provider>
     );

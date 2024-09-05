@@ -9,7 +9,6 @@ function admin(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     if (decoded.role != "Admin") {
-      console.log(decoded);
       return res.status(401).send("Unauthorized|");
     } else {
       next();

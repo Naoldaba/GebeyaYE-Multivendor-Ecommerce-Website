@@ -27,7 +27,6 @@ const RequestList = () => {
           }
           
           const data = await response.json();
-          console.log(data)
           const filteredRequests = data.filter(request => request.status !== "approved");
           setRequests(filteredRequests); 
         } catch (error) {
@@ -52,7 +51,7 @@ const RequestList = () => {
 
     const handleApprove = async (requestId) => {
         try {
-            const response = await fetch(`https://gebeyaye-backend.vercel.app/api/user/changePendding/${requestId} `, {
+            const response = await fetch(`https://gebeyaye-backend.vercel.app/api/user/changepending/${requestId} `, {
                 method: 'PUT',
                 headers: {
                   'authToken': authToken,
@@ -79,8 +78,7 @@ const RequestList = () => {
             {requests.map((request, ind) => (
                 <div key={ind} className='p-3 shadow-2xl mx-6 my-20'>
                     <form className='flex flex-wrap items-center' onSubmit={()=>handleApprove(request._id)}>
-                      {console.log(request.licence)}
-                        <img src={request.licence} alt="Profile" className='w-1/2' />
+                        <img src={request.licence} alt="Profile" className='w-1/2 mr-10' />
                         <div>
                             <div className='mb-4'>
                                 <p>Name:</p>

@@ -25,10 +25,8 @@ function Nav({cartCount, setProducts}){
     }
 
     const toggleLogoutAccount =()=>{
-        console.log(isAuthenticated);
         setAccountClick(!accountClick);
         logout();
-        console.log(isAuthenticated)
     }
 
     const type=localStorage.getItem('userType');
@@ -37,7 +35,7 @@ function Nav({cartCount, setProducts}){
     return (
         <>
             <div>
-                <header className="bg-primary flex h-28 justify-around items-center">
+                <header className="bg-primary flex h-24 justify-around items-center">
                     <div className="logo text-3xl italic text-white font-bold">
                         <p>Gebeyaዬ</p>
                         <p className="text-sm font-normal not-italic">ሱቅ ከእልፍኜ</p>

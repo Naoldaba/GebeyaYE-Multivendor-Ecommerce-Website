@@ -45,7 +45,6 @@ const addOrder = async (req, res) => {
     });
 
     const savedOrder = await order.save();
-    console.log("success");
 
     user.cart = [];
     await user.save();

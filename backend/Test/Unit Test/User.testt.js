@@ -7,7 +7,7 @@ const {
   changeVendorStatus,
   getVendorPending,
   getuserByUsername,
-  changePenddingVendor,
+  changependingVendor,
   getVendorApproved,
   deleteUser,
 } = require("../../controllers/userControllers");
@@ -18,7 +18,7 @@ jest.mock("../../controllers/userControllers", () => ({
   changeVendorStatus: jest.fn(),
   getVendorPending: jest.fn(),
   getuserByUsername: jest.fn(),
-  changePenddingVendor: jest.fn(),
+  changependingVendor: jest.fn(),
   getVendorApproved: jest.fn(),
   deleteUser: jest.fn(),
 }));
@@ -68,13 +68,13 @@ describe("User Routes", () => {
     expect(changeVendorStatus).toHaveBeenCalledWith("123");
   });
 
-  test("PUT /changePendding/:id should call changePenddingVendor controller", async () => {
+  test("PUT /changepending/:id should call changependingVendor controller", async () => {
     await request(app)
-      .put("/changePendding/123")
+      .put("/changepending/123")
       .set("Authorization", "Bearer token")
       .expect(200);
 
-    expect(changePenddingVendor).toHaveBeenCalledWith("123");
+    expect(changependingVendor).toHaveBeenCalledWith("123");
   });
 
   test("POST /vendor should call getuserByUsername controller", async () => {

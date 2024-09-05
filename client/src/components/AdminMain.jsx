@@ -9,31 +9,11 @@ import AdminPanel from './AdminPanel';
 
 
 
-const vendors=[
-    {
-        name:"Naol Daba Mulleta",
-        email:"nahafile@gmail.com",
-        password:"abcdefgh",
-        phoneNum:"0920375653",
-        address:"Arada",
-        accountNum:'1000307059774',
-        package: 'Regular',
-        licence: toy,
-        profilePic: toy
-    }
-]
+const vendors=[]
 
 
 const AdminMain = ({ activeMenu, requests }) => {
   const [selectedVendor, setSelectedVendor]= useState(null);
-    
-  // const toggleAccordion=(vendorName)=>{
-  //     if (selectedVendor===vendorName){
-  //       setSelectedVendor(null);
-  //     }else{
-  //       setSelectedVendor(vendorName);
-  //     }
-  // };
 
   let content = null;
   

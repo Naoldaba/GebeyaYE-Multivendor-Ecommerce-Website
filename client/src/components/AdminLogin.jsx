@@ -6,10 +6,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 
 
 const AdminLogin = ({loginData, setLoginData}) => {
-
     const [showPassword, setShowPassword]=useState(false);
-    // const [password, setPassword]=useState('');
-
     const togglePasswordVisibility=()=>{
         setShowPassword(prevState=>!prevState)
     }

@@ -3,13 +3,13 @@ import { RiAccountCircleFill } from "react-icons/ri";
 import { AuthContext } from './AuthContext';
 
 const VendorSidebar = ({ setActiveMenu, activeMenu, isPremium }) => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
     <div className="sidebar bg-gradient-to-b from-yellow-400 to-yellow-600 col-span-3 h-screen text-white p-6">
       <div className='w-full mb-10 mt-24'>
         <RiAccountCircleFill className="text-6xl mx-auto" />
-        <h2 className='text-xl font-bold mt-2 text-center'>User</h2>
+        <h2 className='text-xl font-bold mt-2 text-center'>{user ? user.name : "User"}</h2>
       </div>
       <ul className='text-lg flex flex-col gap-4'>
         <li

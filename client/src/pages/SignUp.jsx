@@ -1,94 +1,133 @@
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import BuyerSignUp from "../components/BuyerSignUp";
-import VendorSignUp from "../components/VendorSignUp"
-import { useState } from "react";
-import {useHistory} from 'react-router-dom';
+import VendorSignUp from "../components/VendorSignUp";
+import CustomDialog from "../components/CustomDialog"; 
 
 const SignUp = () => {
-    const [selectedOption, setSelectedOption] = useState("Role");
-    const [signUpData, setSignUpData] = useState({});
-    const [licence, setLicence]= useState(null);
-    const [profilePicture, setProfilePicture]=useState(null);
-    const history= useHistory();
+  const [selectedOption, setSelectedOption] = useState("Buyer");
+  const [signUpData, setSignUpData] = useState({});
+  const [licence, setLicence] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const history = useHistory();
 
-    const handleChange = (event) => {
-        const value = event.target.value;
-        setSelectedOption(value);
-      
-        const updatedSignUpData = { ...signUpData, role: value };
-      
-        if (value === "Vendor") {
-          updatedSignUpData.status = "pendding";
-        }
-      
-        setSignUpData(updatedSignUpData);
-      };
-      
-    let signUpChoice;
+  let signUpChoice;
 
-    if (selectedOption === "Vendor") {
-        signUpChoice = <VendorSignUp  setSignUpData={setSignUpData} signUpData={signUpData} setLicence={setLicence} setProfilePicture={setProfilePicture} />;
-    } else {
-        signUpChoice = <BuyerSignUp setSignUpData={setSignUpData} signUpData={signUpData} />;
+  if (selectedOption === "Vendor") {
+    signUpChoice = (
+      <VendorSignUp
+        setSignUpData={setSignUpData}
+        signUpData={signUpData}
+        setLicence={setLicence}
+        setProfilePicture={setProfilePicture}
+      />
+    );
+  } else if (selectedOption === "Buyer") {
+    signUpChoice = (
+      <BuyerSignUp setSignUpData={setSignUpData} signUpData={signUpData} />
+    );
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    let formData = new FormData();
+    signUpData["role"] = selectedOption
+    if (selectedOption=="Vendor"){
+      signUpData["status"] = "pending"
     }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-    
-          let formData = new FormData();
-    
-          Object.entries(signUpData).forEach(([key, value]) => {
-              formData.append(key, value);
-            
+    Object.entries(signUpData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    if (selectedOption === "Vendor") {
+      formData.append("licence", licence);
+      formData.append("profilePicture", profilePicture);
+    }
+
+    fetch("https://gebeyaye-backend.vercel.app/api/user", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text);
           });
-          if (selectedOption==="Vendor"){
-            formData.append("licence", licence);
-            formData.append("profilePicture", profilePicture);  
-          }
-    
-          fetch("https://gebeyaye-backend.vercel.app/api/user", {
-            method: "POST",
-            body: formData,
-          })
-          .then((response)=>{
-            if (!response.ok) {
-              return response.text().then((text)=>{
-                throw new Error(text);
-              })
-              
-              
-            } else{
-                return response.json().then((data)=>{
-                  console.log(data);
-                  if (selectedOption == "Buyer") {
-                    alert(`Dear ${data.name} you are successfully signed up. You can login and continue`);
-                    history.push('/login');
-                  } else {
-                    alert(`Dear ${data.name} your application is successfully sent.`);
-                    history.push('/application status');
-                  }
-                })
+        } else {
+          return response.json().then((data) => {
+            if (selectedOption === "Buyer") {
+              setDialogMessage(
+                `Dear ${data.name}, you have successfully signed up. You can log in and continue.`
+              );
+              setIsOpen(true);
+            } else {
+              setDialogMessage(
+                `Dear ${data.name}, your application has been successfully submitted.`
+              );
+              setIsOpen(true);
             }
-          })
-         .catch ((error)=>{
-          alert(error.message)
-        }) 
-      };
+          });
+        }
+      })
+      .catch((error) => {
+        setDialogMessage(error.message);
+        setIsOpen(true);
+      });
+  };
 
-    return (
-        <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center w-2/3 max-w-lg mx-auto bg-gray-200 my-10 rounded-md">
-            
-            <h1 className="my-5 text-5xl text-center font-bold"><span className="text-blue-500">Welcome</span> to GebeyaYe!</h1>
-            <div className="w-4/5">
-                <select value={selectedOption} onChange={handleChange} className="w-full" required>
-                    <option value="Role">Role</option>
-                    <option value="Buyer">Buyer</option>
-                    <option value="Vendor">Vendor</option>
-                </select>
-            </div>
+  const closeModal = () => {
+    setIsOpen(false);
+    if (dialogMessage.includes("successfully")) {
+      if (selectedOption === "Buyer") {
+        history.push("/login");
+      } else {
+        history.push("/application-status");
+      } 
+    }
+  };
 
-            {signUpChoice}
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 py-14">
+      <div className="bg-white shadow-2xl rounded-lg overflow-hidden w-full max-w-2xl transition-transform transform hover:scale-105">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-8">
+          <h1 className="text-4xl font-extrabold tracking-wide">
+            Welcome to <span className="text-yellow-400">Gebeyaዬ!</span>
+          </h1>
+          <p className="text-lg mt-2">Join us by creating your account</p>
+        </div>
+        <form onSubmit={handleSubmit} className="p-10 space-y-6">
+          <div>
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              Select Your Role
+            </label>
+            <select
+              value={selectedOption}
+              onChange={(event) => setSelectedOption(event.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+              required
+            >
+              <option value="Buyer">Buyer</option>
+              <option value="Vendor">Vendor</option>
+            </select>
+          </div>
+
+          {signUpChoice}
+
+          
         </form>
-    );
-}
- 
+      </div>
+
+      <CustomDialog
+        isOpen={isOpen}
+        title="Sign Up Status"
+        message={dialogMessage}
+        onClose={closeModal}
+      />
+    </div>
+  );
+};
+
 export default SignUp;

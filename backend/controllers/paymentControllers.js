@@ -45,7 +45,6 @@ const verifyAccount = async (req, res) => {
     }
 
     const email = user.email;
-    console.log(user);
 
     const verificationCode = generateVerificationCode();
 
@@ -55,7 +54,6 @@ const verifyAccount = async (req, res) => {
 
     res.status(200).send("Verification code sent successfully.");
   } catch (error) {
-    console.error("Error performing premium payment:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -95,7 +93,6 @@ const performPremiumPayment = async (req, res) => {
       Vendor.payment = "approved";
       await Vendor.save();
 
-      console.log("approved");
       await UserVerification.deleteOne({ email });
 
       res
@@ -137,7 +134,6 @@ const performProductPayment = async (req, res) => {
       bankAccount.balance -= amount;
       await bankAccount.save();
 
-      console.log("approved");
       await UserVerification.deleteOne({ email });
 
       res

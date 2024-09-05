@@ -1,56 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
-import shoe from '../utils/shoe.avif';
-import bag from '../utils/bag.avif';
-import toy from '../utils/toy.jpg';
 import { AuthContext } from '../components/AuthContext';
 import VendorSidebar from '../components/VendorSidebar';
 import VendorMain from '../components/VendorMain';
 
 
-const productData=[
-    {
-      id:1,
-      name:"product-1",
-      image: shoe,
-      description: "bla bla",
-      price: 1200
-    },
-    {
-      id:2,
-      name:"product-2",
-      image: bag,
-      description: "bla bla",
-      price: 3000
-    },
-    {
-      id:3,
-      name:"product-3",
-      image: toy,
-      description: "bla bla",
-      price: 2500
-    },
-    {
-      id:4,
-      name:"product-1",
-      image: shoe,
-      description: "bla bla",
-      price: 1000
-    },
-    {
-      id:5,
-      name:"product-2",
-      image: bag,
-      description: "bla bla",
-      price: 5000
-    },
-    {
-      id:6,
-      name:"product-3",
-      image: toy,
-      description: "bla bla",
-      price: 1000
-    }
-  ]
+const productData=[]
 
 const VendorDashboard = () => {
     const [activeMenu, setActiveMenu] = useState('products');
@@ -72,7 +26,6 @@ const VendorDashboard = () => {
               'Content-Type': 'application/json'
             }
           })
-          console.log(authToken);
           if (isMounted && response.ok) {
             const data = await response.json();
             setVendorData(data);

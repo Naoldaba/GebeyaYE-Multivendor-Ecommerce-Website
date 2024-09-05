@@ -9,7 +9,7 @@ const {
   changeVendorStatus,
   getVendorPending,
   getuserByUsername,
-  changePenddingVendor,
+  changependingVendor,
   getVendorApproved,
   deleteUser,
   deleteMySelf,
@@ -29,7 +29,7 @@ router.post(
 router.get("/me", auth, getUser);
 router.get("/", admin, getVendorPending);
 router.put("/cangeVendorStatus/:id", admin, changeVendorStatus);
-router.put("/changePendding/:id", admin, changePenddingVendor);
+router.put("/changepending/:id", admin, changependingVendor);
 router.post("/vendor", upload.none(), getuserByUsername);
 
 router.get("/approvedVendor", admin, getVendorApproved);

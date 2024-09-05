@@ -44,16 +44,12 @@ const Login = () => {
         event.preventDefault();
         try {
             if (!loginData.name || !loginData.password || !loginData.role || loginData.role === "Select Role") {
-                console.log("Incomplete login data");
                 return;
             }
-            console.log(loginData)
             const success = await login(loginData.name, loginData.password, loginData.role);
     
             if (success==="vendorLogin") {
-                console.log("Login Successful");
                 localStorage.setItem('userType', userType);
-                console.log(userType);
                 handleLoginSuccess(loginData.role);
                 history.push('/vendordashboard')
                 
@@ -65,16 +61,13 @@ const Login = () => {
             }
             else if (success==="buyerLogin"){
                 localStorage.setItem('userType', userType);
-                console.log(userType);
                 history.push('/login/buyerlogin')
             }
             else if (success==="adminLogin"){
                 localStorage.setItem('userType', userType);
-                console.log(userType);
                 history.push('/admindashboard')
             }
             else {
-                console.log('failedlogin')
                 history.push('/login/loginfailed')
             }
     
@@ -120,6 +113,7 @@ const Login = () => {
                     </div>
                     {componentToRender}
                     <p className="text-right w-4/5 text-blue-500 mt-6"><NavLink to="/signup" className="">don't have account? Sign Up</NavLink></p>
+                    <p className="text-right w-4/5 text-blue-500 "><NavLink to="/application-status" className="">view application status</NavLink></p>
                     <button className="bg-primary my-10 px-4 py-2 text-white rounded" disabled={isDisabled}>Log In</button>
                 </form>
                 <div className="hidden lg:block w-1/3">

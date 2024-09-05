@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 
-const BuyerSignUp = ({ signUpData, setSignUpData }) => {
+const PersonalInformation = ({ signUpData, handleInputChange, handleNextSection }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleData = (prop, event) => {
-    let value = event.target.value;
-    setSignUpData({ ...signUpData, [prop]: value });
   };
 
   const handleConfirmPasswordChange = (event) => {
@@ -23,7 +18,6 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
   return (
     <div className="w-4/5 my-10 mx-auto">
       <h1 className="text-2xl mb-6 text-center">Personal Information</h1>
-      
       <div className="mb-5">
         <label className="block mb-2 text-lg">Full Name</label>
         <input
@@ -31,10 +25,10 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           type="text"
           placeholder="Enter full name"
           required
-          onChange={(event) => handleData("name", event)}
+          value={signUpData.name || ''}
+          onChange={(event) => handleInputChange("name", event)}
         />
       </div>
-
       <div className="mb-5">
         <label className="block mb-2 text-lg">Username</label>
         <input
@@ -42,11 +36,11 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           type="text"
           placeholder="Enter username"
           required
-          onChange={(event) => handleData("username", event)}
+          value={signUpData.username || ''}
+          onChange={(event) => handleInputChange("username", event)}
           min="5"
         />
       </div>
-
       <div className="mb-5">
         <label className="block mb-2 text-lg">Email</label>
         <input
@@ -54,10 +48,10 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           type="email"
           placeholder="Enter email"
           required
-          onChange={(event) => handleData("email", event)}
+          value={signUpData.email || ''}
+          onChange={(event) => handleInputChange("email", event)}
         />
       </div>
-
       <div className="mb-5 relative">
         <label className="block mb-2 text-lg">Password</label>
         <input
@@ -65,7 +59,8 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           type={showPassword ? "text" : "password"}
           placeholder="Enter password"
           required
-          onChange={(event) => handleData("password", event)}
+          value={signUpData.password || ''}
+          onChange={(event) => handleInputChange("password", event)}
         />
         <button
           type="button"
@@ -75,7 +70,6 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           {showPassword ? "Hide" : "Show"}
         </button>
       </div>
-
       <div className="mb-5">
         <label className="block mb-2 text-lg">Confirm Password</label>
         <input
@@ -90,7 +84,6 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           <p className="text-red-500 text-sm mt-1">Passwords do not match</p>
         )}
       </div>
-
       <div className="mb-5">
         <label className="block mb-2 text-lg">Phone Number</label>
         <input
@@ -98,30 +91,19 @@ const BuyerSignUp = ({ signUpData, setSignUpData }) => {
           type="text"
           placeholder="Enter phone number"
           required
-          onChange={(event) => handleData("phone", event)}
+          value={signUpData.phone || ''}
+          onChange={(event) => handleInputChange("phone", event)}
         />
       </div>
-
-      <div className="mb-5">
-        <label className="block mb-2 text-lg">Account Number</label>
-        <input
-          className="w-full p-2 border rounded"
-          type="text"
-          placeholder="Enter CBE Account Number"
-          required
-          onChange={(event) => handleData("accountNumber", event)}
-        />
-      </div>
-
       <button
-        type="submit"
-        className="w-full py-3 mt-4 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-md shadow-lg hover:shadow-xl transition-shadow focus:outline-none focus:ring-4 focus:ring-green-300"
+        onClick={handleNextSection}
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-4 mx-auto block"
         disabled={passwordError}
       >
-        Sign Up
+        Next
       </button>
     </div>
   );
 };
 
-export default BuyerSignUp;
+export default PersonalInformation;

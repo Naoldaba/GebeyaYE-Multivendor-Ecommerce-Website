@@ -44,7 +44,6 @@ const removeCartItem = async (req, res) => {
     const userId = req.user._id;
 
     const user = await User.findById(userId);
-    console.log(user);
 
     if (!user) {
       return res.status(404).send({ error: "User not found" });
@@ -56,7 +55,6 @@ const removeCartItem = async (req, res) => {
       (item) => item._id == productIdToRemove
     );
 
-    console.log(cartItemIndex);
 
     if (cartItemIndex === -1) {
       return res.status(404).send({ error: "Product not found in the cart" });

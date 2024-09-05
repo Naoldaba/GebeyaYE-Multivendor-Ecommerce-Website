@@ -1,4 +1,5 @@
 const { User, UserValidater } = require("../models/User");
+const Account = require("../models/BankAccount")
 
 const bcrypt = require("bcrypt");
 
@@ -25,7 +26,7 @@ const userRegister = async (req, res) => {
 
     const usernameInUserDatabse = await User.findOne({ username: username });
     if (usernameInUserDatabse) {
-      return res.status(400).send("The username is alredy taken");
+      return res.status(400).send("The username is already taken");
     }
 
     let user = new User({
@@ -42,15 +43,14 @@ const userRegister = async (req, res) => {
       status,
     });
 
-    if (role == "Vendor") {
+    if (role === "Vendor") {
       const { licence, profilePicture } = req.files;
-      const serverBaseURL = "https://gebeyaye-backend.vercel.app";
 
-      user.licence = `${serverBaseURL}/public/images/${licence[0].filename}`;
-      user.profilePicture = `${serverBaseURL}/public/images/${profilePicture[0].filename}`;
+      user.licence = licence[0].path; 
+      user.profilePicture = profilePicture[0].path; 
 
       if (isPremium) {
-        user.payment = "pendding";
+        user.payment = "pending";
       }
     }
 
@@ -58,6 +58,17 @@ const userRegister = async (req, res) => {
     user.password = await bcrypt.hash(user.password, salt);
 
     user = await user.save();
+
+    const account = new Account({
+      name: user.name,
+      accountNumber: user.accountNumber,
+      balance: 10000, 
+      email: user.email,
+    });
+
+    await account.save();
+    
+  
     const token = user.generetAuthToken();
     res.status(200).header("authToken", token).send({ name, username });
   } catch (error) {
@@ -91,7 +102,7 @@ const changeVendorStatus = async (req, res) => {
 
 const getVendorPending = async (req, res) => {
   try {
-    const pendingVendor = await User.find({ status: "pendding" });
+    const pendingVendor = await User.find({ status: "pending" });
     return res.status(200).send(pendingVendor);
   } catch (error) {
     console.error("Error retrieving Users:", error);
@@ -112,7 +123,6 @@ const getVendorApproved = async (req, res) => {
 const getuserByUsername = async (req, res) => {
   try {
     const userName = req.body.name;
-    console.log(userName);
     const pendingVendor = await User.find({ username: userName });
     if (!pendingVendor) {
       return res
@@ -127,7 +137,7 @@ const getuserByUsername = async (req, res) => {
   }
 };
 
-const changePenddingVendor = async (req, res) => {
+const changependingVendor = async (req, res) => {
   try {
     const vendorId = req.params.id;
     const approvedVendor = await User.findByIdAndUpdate(
@@ -185,7 +195,7 @@ const changeMyStuates = async (req, res) => {
     const userId = req.user._id;
     const premiumVendor = await User.findByIdAndUpdate(
       userId,
-      { isPremium: true, payment: "pendding" },
+      { isPremium: true, payment: "pending" },
       { new: true }
     );
 
@@ -218,7 +228,7 @@ module.exports = {
   changeVendorStatus,
   getVendorPending,
   getuserByUsername,
-  changePenddingVendor,
+  changependingVendor,
   getVendorApproved,
   deleteUser,
   deleteMySelf,

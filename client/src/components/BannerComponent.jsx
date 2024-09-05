@@ -1,13 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import CustomDialog from './CustomDialog'; 
 
 const BannerComponent = () => {
   const [advertisement, setAdvertisement] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const {authToken} = useContext(AuthContext);
-  const [description, setDescription]= useState(null);
-  const history= useHistory();
+  const [dialogOpen, setDialogOpen] = useState(false); 
+  const [dialogMessage, setDialogMessage] = useState(''); 
+  const { authToken } = useContext(AuthContext);
+  const [description, setDescription] = useState(null);
+  const history = useHistory();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -29,22 +32,23 @@ const BannerComponent = () => {
       formData.append('description', description);
       const response = await fetch('https://gebeyaye-backend.vercel.app/api/advert', {
         method: 'POST',
-        headers:{
+        headers: {
           'authToken': authToken
         },
         body: formData,
       });
-      console.log(authToken);
 
       if (response.ok) {
-        console.log('Advertisement uploaded successfully!');
-        alert("banner successfully sent for approval");
-        history.push('/product management');
+        setDialogMessage("Banner successfully sent for approval");
+        setDialogOpen(true); 
       } else {
-        console.error('Failed to upload advertisement');
+        setDialogMessage("Failed to upload advertisement");
+        setDialogOpen(true); 
       }
     } catch (error) {
       console.error('Error uploading advertisement:', error);
+      setDialogMessage("Error uploading advertisement");
+      setDialogOpen(true);
     }
   };
 
@@ -76,6 +80,17 @@ const BannerComponent = () => {
           Upload Advertisement
         </button>
       </form>
+
+      <CustomDialog
+        isOpen={dialogOpen}
+        message={dialogMessage}
+        onClose={() => {
+          setDialogOpen(false);
+          if (dialogMessage.includes("successfully")) {
+            history.push('/vendordashboard');
+          }
+        }}
+      />
     </div>
   );
 };

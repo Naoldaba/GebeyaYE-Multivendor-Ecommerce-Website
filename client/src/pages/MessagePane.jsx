@@ -3,21 +3,24 @@ import { AuthContext } from '../components/AuthContext';
 import { FaInstagram } from "react-icons/fa";
 import { FaTelegram } from "react-icons/fa";
 import { BiLogoGmail } from "react-icons/bi";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import CustomDialog from "../components/CustomDialog";
 
 const MessagePage = ({ userType, userId }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const {authToken} = useContext(AuthContext);
-    const history=useHistory();
+    const { authToken } = useContext(AuthContext);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState({ title: '', message: '' });
+    const history = useHistory();
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
                 const response = await fetch(`https://gebeyaye-backend.vercel.app/api/message/myinbox`, {
-                    method:"GET",
-                    headers:{
-                        'authToken':authToken
+                    method: "GET",
+                    headers: {
+                        'authToken': authToken
                     }
                 });
                 if (response.ok) {
@@ -32,7 +35,7 @@ const MessagePage = ({ userType, userId }) => {
         };
 
         fetchMessages();
-    }, [userType, userId]);
+    }, [userType, userId, authToken]);
 
     const sendMessage = async () => {
         try {
@@ -50,14 +53,16 @@ const MessagePage = ({ userType, userId }) => {
 
             if (response.ok) {
                 setNewMessage('');
-                alert('message successfully sent!!!')
+                setDialogMessage({ title: 'Success', message: 'Message successfully sent!' });
+                setDialogOpen(true);
             } else {
                 throw new Error('Failed to send message');
             }
         } catch (error) {
             console.error(error);
-            alert('Please log in first')
-            history.push('/login')
+            setDialogMessage({ title: 'Error', message: 'Please log in first.' });
+            setDialogOpen(true);
+            history.push('/login');
         }
     };
 
@@ -70,20 +75,19 @@ const MessagePage = ({ userType, userId }) => {
                     <p>Email: nahafile@gmail.com</p>
                     <p>Phone: +251-920-375-653</p>
                     <div className='flex mt-10'>
-                        <FaTelegram data-testid='telegram-icon' className="social-icons" color="#672301DE" fontSize="40px"/>
-                        <FaInstagram data-testid='instagram-icon' className="social-icons" color="#672301DE" fontSize="40px"/>
-                        <BiLogoGmail data-testid='gmail-icon' className="social-icons" color="#672301DE" fontSize="40px"/>
+                        <FaTelegram data-testid='telegram-icon' className="social-icons" color="#672301DE" fontSize="40px" />
+                        <FaInstagram data-testid='instagram-icon' className="social-icons" color="#672301DE" fontSize="40px" />
+                        <BiLogoGmail data-testid='gmail-icon' className="social-icons" color="#672301DE" fontSize="40px" />
                     </div>
                 </div>
             </div>
             <div className='w-1/2 text-xl'>
                 <p className='mb-6'>Empowering Your Shopping Experience, One Click at a Time!</p>
-                <div className=" bg-white shadow-lg rounded-lg border-4 overflow-hidden max-w-lg">
+                <div className="bg-white shadow-lg rounded-lg border-4 overflow-hidden max-w-lg">
                     <div className="bg-gray-200 text-gray-700 p-4">
                         <h1 className="text-xl font-semibold">Messages</h1>
                     </div>
                     <div className="px-4 py-2 flex flex-col h-80 overflow-auto">
-                        
                         {messages.map((message) => (
                             <div key={message._id} className="border-b py-2 my-3">
                                 <p className="text-xs text-gray-500">{message.timestamp}</p>
@@ -110,6 +114,12 @@ const MessagePage = ({ userType, userId }) => {
                     </div>
                 </div>
             </div>
+            <CustomDialog
+                isOpen={dialogOpen}
+                title={dialogMessage.title}
+                message={dialogMessage.message}
+                onClose={() => setDialogOpen(false)}
+            />
         </div>
     );
 };
