@@ -28,7 +28,9 @@ mongoose
     console.log("somting bad happen", e);
   });
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://gebeyaye-ecommerce.vercel.app', 
+}));
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use("/api/product", product);
